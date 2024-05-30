@@ -2,7 +2,6 @@
 #define TOKENS_HPP_
   enum tokentype
   {
-    VOID = 1,
     INT = 2,
     BYTE = 3,
     B = 4,
