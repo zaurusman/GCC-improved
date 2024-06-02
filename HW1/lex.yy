@@ -4,9 +4,8 @@
 #include <stdio.h>
 #include "tokens.hpp"
 #include <iostream>
-#include <string>
 using namespace std;
-void escape();
+
 
 %}
 
@@ -20,7 +19,7 @@ printable       ([\x20\x21\x23-\x5b\x5d-\x7e]|\t)
 
 %x COMM
 %x STR
-%x ESCAPE
+%x ESC
 
 %%
 
@@ -52,39 +51,15 @@ continue                                      return CONTINUE;
 {letter}({letter}|{digit})*                   return ID;
 [1-9]{digit}*|0                               return NUM;
 
-\"                                            {BEGIN(STR); return STRING;}
-<STR>{printable}*                             cout << yytext;
-<STR>\\                                       BEGIN(ESCAPE); 
-<ESCAPE>[nrt0"\\]|(x{hex_digit}{2})           {BEGIN(STR); escape();}
-<ESCAPE>.|(x..)                               {cout << "Error undefined escape sequence " << yytext << endl; exit(0);}
-<STR>\"                                       {BEGIN(INITIAL); cout << endl;}
+\"                                            {BEGIN(STR); return STRING_START;}
+<STR>{printable}*                             return STRING;
+<STR>\\                                       BEGIN(ESC); 
+<ESC>[nrt0"\\]|(x{hex_digit}{2})              {BEGIN(STR); return ESCAPE;}
+<ESC>.|(x[^"]{1,2})                           {cout << "Error undefined escape sequence " << yytext << endl; exit(0);}
+<STR>\"                                       {BEGIN(INITIAL); return STRING_END;}
 <STR>.|\n                                     {cout << "Error unclosed string\n"; exit(0);}
 
 {whitespace}			               	      {; /*ignore*/}
 .	                                          {cout << "Error " << yytext << endl; exit(0);}
 
 %%
-
-void escape() {
-    switch (*yytext) {
-        case 'n': cout << '\n'; break;
-        case 'r': cout << '\r'; break;
-        case 't': cout << '\t'; break;
-        case '0': cout << '\0'; break;
-        case '"': cout << '\"'; break;
-        case '\\': cout << '\\'; break;
-        case 'x': {
-            string s{yytext+1};
-            char hex = static_cast<char>(std::stoi(s, nullptr, 16));
-            if ((hex > '\x20' && hex < '\x7e') || hex == '\t') {
-                cout << hex;
-            }
-            else {
-                cout << "Error undefined escape sequence " << yytext << endl; exit(0);
-            }
-            break;
-        }
-        default: cout << "Error undefined escape sequence " << yytext << endl; exit(0);
-    }
-
-}

@@ -36,13 +36,50 @@ int main()
         "STRING"
     };
 	int token;
+	string str;
+	bool str_open = false;
+
 	while(token = yylex()) {
-		if (token == STRING) {
-			cout << yylineno << ' ' << tokens[token] << ' ';
+		if (token == STRING_START) {
+			str.clear();
+			str_open = true;
+		}
+		else if (token == STRING) {
+			str += yytext;
+		}
+		else if (token == STRING_END) {
+			cout << yylineno << ' ' << tokens[STRING] << ' ' << str << endl;
+			str_open = false;
+		}
+		else if (token == ESCAPE) {
+			switch (*yytext) {
+				case 'n': str += '\n'; break;
+				case 'r': str += '\r'; break;
+				case 't': str += '\t'; break;
+				case '0': str += '\0'; break;
+				case '"': str += '\"'; break;
+				case '\\': str += '\\'; break;
+				case 'x': {
+					string s{yytext+1};
+					char hex = static_cast<char>(std::stoi(s, nullptr, 16));
+					if ((hex > '\x20' && hex < '\x7e') || hex == '\t') {
+						str += hex;
+					}
+					else {
+						cout << "Error undefined escape sequence " << yytext << endl; exit(0);
+					}
+					break;
+				}
+				default: cout << "Error undefined escape sequence " << yytext << endl; exit(0);
+			}
 		}
 		else {
 			cout << yylineno << ' ' << tokens[token] << ' ' << yytext << endl;
 		}
+	}
+	if (str_open) {
+		cout << "Error unclosed string\n";
+		exit(0);
 	}
 	return 0;
 }
