@@ -55,7 +55,7 @@ continue                                      return CONTINUE;
 <STR>{printable}*                             return STRING;
 <STR>\\                                       BEGIN(ESC); 
 <ESC>[nrt0"\\]|(x{hex_digit}{2})              {BEGIN(STR); return ESCAPE;}
-<ESC>.|(x[^"\n]{1,2})                         {cout << "Error undefined escape sequence " << yytext << endl; exit(0); } //maybe without \n
+<ESC>.|(x[^"\n]{1,2})                         {cout << "Error undefined escape sequence " << yytext << endl; exit(0); /*maybe without \n */}
 <ESC>\n                                       {cout << "Error unclosed string\n"; exit(0);}
 <STR>\"                                       {BEGIN(INITIAL); return STRING_END;}
 <STR>.|\n                                     {cout << "Error unclosed string\n"; exit(0);}
