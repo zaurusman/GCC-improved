@@ -61,8 +61,8 @@ int main()
 				case '\\': str += '\\'; break;
 				case 'x': {
 					string s{yytext+1};
-					char hex = static_cast<char>(std::stoi(s, nullptr, 16));
-					if ((hex > '\x00' && hex < '\x7F') || hex == '\t') {
+					char hex = static_cast<char>(stoi(s, nullptr, 16));
+					if (hex >= '\x00' && hex <= '\x7F') {
 						str += hex;
 					}
 					else {
