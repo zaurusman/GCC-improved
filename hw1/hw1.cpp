@@ -48,7 +48,8 @@ int main()
 			str += yytext;
 		}
 		else if (token == STRING_END) {
-			cout << yylineno << ' ' << tokens[STRING] << ' ' << str << endl;
+			//cout << yylineno << ' ' << tokens[STRING] << ' ' << str << endl;
+			printf("%d %s %s\n", yylineno, tokens[STRING].c_str(), str.c_str());
 			str_open = false;
 		}
 		else if (token == ESCAPE) {
