@@ -1,0 +1,9 @@
+1 RELOP !=
+1 BOOL bool
+1 RELOP >
+1 BINOP -
+1 ID falsebyte
+1 STRING \ 63874 LNI5N3gFvAAE \ V 
+1 NUM 33954
+1 ID SWy
+Error \

@@ -1,0 +1,7 @@
+if (false)
+	if (true)
+		x = 3;
+	else
+		x = 2;
+
+x = 2;

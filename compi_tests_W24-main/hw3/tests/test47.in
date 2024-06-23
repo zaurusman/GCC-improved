@@ -1,0 +1,4 @@
+
+if (print("returns void not bool")) int q;
+if (printi(1)) int q; // "returns void not bool"
+if (readi(1)) int q; //"returns int not bool"

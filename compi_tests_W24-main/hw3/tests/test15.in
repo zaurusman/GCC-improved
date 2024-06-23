@@ -1,0 +1,4 @@
+int a;
+readi(a);
+int c = readi(a + 3 / a);
+bool s = readi(3);

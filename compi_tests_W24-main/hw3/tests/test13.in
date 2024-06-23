@@ -1,0 +1,2 @@
+print("print");
+int a = print("print");

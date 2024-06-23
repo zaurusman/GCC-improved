@@ -1,0 +1,6 @@
+1 STRING GbwaAE RhbThF8GCC F O w orfalse-
+1 NUM 2380
+1 NUM 0
+1 NUM 0
+1 NUM 93192
+Error \

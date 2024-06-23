@@ -1,0 +1,6 @@
+1 B b
+1 RELOP >=
+1 STRING 88630 A2EBZSpSSS \ i C 
+1 ID E
+1 ID PY0QFhSB5
+Error \

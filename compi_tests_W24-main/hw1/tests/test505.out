@@ -1,0 +1,6 @@
+1 ID hGt4
+1 LPAREN (
+1 BYTE byte
+1 STRING >oSPrdqUo437pPybGbz38HM6i7
+1 ID T
+Error \

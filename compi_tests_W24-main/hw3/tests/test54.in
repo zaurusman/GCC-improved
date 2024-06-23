@@ -1,0 +1,5 @@
+
+if (true) int x = 3;
+if (true) byte y = 3 b;
+if (true) int z = 3 b;
+if (true) byte w = 3;

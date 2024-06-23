@@ -1,0 +1,34 @@
+toruth tabel for ((a and b) or (c and d)) for (a,b,c,d) in {false, true}^4
+0
+0
+0
+1
+0
+0
+0
+1
+0
+0
+0
+1
+1
+1
+1
+1
+toruth tabel for ((a or not b) and not (not c or d)) for (a,b,c,d) in {false, true}^4
+0
+0
+1
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+0
+1
+0

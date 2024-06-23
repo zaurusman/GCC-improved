@@ -1,0 +1,130 @@
+print("toruth tabel for ((a and b) or (c and d)) for (a,b,c,d) in {false, true}^4");
+if ((false and false) or (false and false))
+    printi(1);
+else
+    printi(0);
+if ((false and false) or (false and true))
+    printi(1);
+else
+    printi(0);
+if ((false and false) or (true and false))
+    printi(1);
+else
+    printi(0);
+if ((false and false) or (true and true))
+    printi(1);
+else
+    printi(0);
+if ((false and true) or (false and false))
+    printi(1);
+else
+    printi(0);
+if ((false and true) or (false and true))
+    printi(1);
+else
+    printi(0);
+if ((false and true) or (true and false))
+    printi(1);
+else
+    printi(0);
+if ((false and true) or (true and true))
+    printi(1);
+else
+    printi(0);
+if ((true and false) or (false and false))
+    printi(1);
+else
+    printi(0);
+if ((true and false) or (false and true))
+    printi(1);
+else
+    printi(0);
+if ((true and false) or (true and false))
+    printi(1);
+else
+    printi(0);
+if ((true and false) or (true and true))
+    printi(1);
+else
+    printi(0);
+if ((true and true) or (false and false))
+    printi(1);
+else
+    printi(0);
+if ((true and true) or (false and true))
+    printi(1);
+else
+    printi(0);
+if ((true and true) or (true and false))
+    printi(1);
+else
+    printi(0);
+if ((true and true) or (true and true))
+    printi(1);
+else
+    printi(0);
+print("toruth tabel for ((a or not b) and not (not c or d)) for (a,b,c,d) in {false, true}^4");
+if ((false or not false) and not (not false or false))
+    printi(1);
+else
+    printi(0);
+if ((false or not false) and not (not false or true))
+    printi(1);
+else
+    printi(0);
+if ((false or not false) and not (not true or false))
+    printi(1);
+else
+    printi(0);
+if ((false or not false) and not (not true or true))
+    printi(1);
+else
+    printi(0);
+if ((false or not true) and not (not false or false))
+    printi(1);
+else
+    printi(0);
+if ((false or not true) and not (not false or true))
+    printi(1);
+else
+    printi(0);
+if ((false or not true) and not (not true or false))
+    printi(1);
+else
+    printi(0);
+if ((false or not true) and not (not true or true))
+    printi(1);
+else
+    printi(0);
+if ((true or not false) and not (not false or false))
+    printi(1);
+else
+    printi(0);
+if ((true or not false) and not (not false or true))
+    printi(1);
+else
+    printi(0);
+if ((true or not false) and not (not true or false))
+    printi(1);
+else
+    printi(0);
+if ((true or not false) and not (not true or true))
+    printi(1);
+else
+    printi(0);
+if ((true or not true) and not (not false or false))
+    printi(1);
+else
+    printi(0);
+if ((true or not true) and not (not false or true))
+    printi(1);
+else
+    printi(0);
+if ((true or not true) and not (not true or false))
+    printi(1);
+else
+    printi(0);
+if ((true or not true) and not (not true or true))
+    printi(1);
+else
+    printi(0);

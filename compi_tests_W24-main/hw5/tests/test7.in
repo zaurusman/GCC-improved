@@ -1,0 +1,71 @@
+print("5 == 5b evaluation");
+if (5 == 5b)
+    printi(1);
+else
+    printi(0);
+
+print("5 != 5b evaluation");
+if (5 != 5b)
+    printi(1);
+else
+    printi(0);
+
+print("Evaluation with if (exp){printi(1)}else{printi(0)} with truth tabels {0, 1} and {00, 01, 10, 11} but values are relationals");
+
+print("NOT truth table");
+if (not (5 == 4))
+    printi(1);
+else
+    printi(0);
+
+if (not (5 != 4))
+    printi(1);
+else
+    printi(0);
+
+
+print("AND truth table");
+
+if (0 > 1 and 1 < 0)
+    printi(1);
+else
+    printi(0);
+
+if (0 >= 1 and 0 >= 0)
+    printi(1);
+else
+    printi(0);
+
+if (0 <= 0 and 1 <= 0)
+    printi(1);
+else
+    printi(0);
+
+if (0 < 1 and 1 > 0)
+    printi(1);
+else
+    printi(0);
+
+
+print("OR truth table");
+
+if (0b > 0 or 0b < 0)
+    printi(1);
+else
+    printi(0);
+
+if (0b > 0 or 0 >= 0b)
+    printi(1);
+else
+    printi(0);
+
+if (0 <= 0b or 0b < 0)
+    printi(1);
+else
+    printi(0);
+
+if (0 < 1b or 1 > 0b)
+    printi(1);
+else
+    printi(0);
+

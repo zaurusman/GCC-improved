@@ -1,0 +1,4 @@
+
+byte x = 4278b;
+printi((int) x);
+printi(x);

@@ -1,0 +1,9 @@
+1 BYTE byte
+1 RPAREN )
+1 BINOP +
+1 BOOL bool
+1 STRING breakb2PMjQGWmkhsOmA=5UOU1oPZVi0c
+1 STRING 
+  	  
+1 NUM 42671
+Error \

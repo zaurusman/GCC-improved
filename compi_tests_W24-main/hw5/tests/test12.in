@@ -1,0 +1,15 @@
+int x = 0;
+while(x < 3){
+    int y = 0;
+    while(y < 3){
+        if(x == y){
+            break;
+        }
+        print("x");
+        printi(x);
+        print("y");
+        printi(y);
+        y = y + 1;
+    }
+    x = x + 1;
+}

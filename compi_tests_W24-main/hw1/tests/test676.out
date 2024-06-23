@@ -1,0 +1,6 @@
+1 STRING 31880 
+ 29882 
+ nB 55371 T8GT5lOphOYOcG5 
+ vAqWah 
+1 NUM 31880
+Error \

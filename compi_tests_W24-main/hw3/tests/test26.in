@@ -1,0 +1,21 @@
+
+bool BOOL = true;
+bool Bool = false;
+if (true and false){
+    if (true or false){
+        if (not false and 1 <= 2 and 1 >= 2 and 1 < 2 and 1 > 2 and 1 == 2 and 1 != 2){
+            int x = 1;
+            return;
+        }
+    } else {
+        int y = 3;
+    }
+    while (BOOL){
+        break;
+        continue;
+        bool z=5;
+    } //  This is a commment
+    print("HELLOWWWW")
+    print("HELLOWWWW \")
+    ");
+}

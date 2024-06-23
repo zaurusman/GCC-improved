@@ -1,0 +1,3 @@
+lli: hw5/tests/temp_test42.ill.res:1:1: error: expected top-level entity
+line 3: type mismatch
+^

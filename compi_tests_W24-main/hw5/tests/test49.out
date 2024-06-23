@@ -1,0 +1,3 @@
+lli: hw5/tests/temp_test49.ill.res:1:1: error: expected top-level entity
+line 1: byte value 257 out of range
+^

@@ -1,0 +1,12 @@
+s = (x + y) * z;
+s = (x * y) + z;
+s = (x + y) + z;
+s = (x * y) * z;
+s = x + (y * z);
+s = x * (y + z);
+s = x + (y + z);
+s = x * (y * z);
+s = (x + y * z);
+s = (x * y + z);
+s = (x + y + z);
+s = (x * y * z);

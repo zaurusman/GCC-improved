@@ -1,0 +1,62 @@
+{
+    print("Fibonachy numbers:");
+    byte MaxFibNumberToPrint = (byte)20;
+    byte whichFibNumber = (byte)1;
+    while (whichFibNumber < MaxFibNumberToPrint){
+        byte index = (byte)1;
+        int prevNum = 0;
+        int currNum = 1;
+        int temp;
+        while (true){
+            if (index == whichFibNumber){
+                printi(currNum);
+                break;
+            }
+            temp = currNum + prevNum;
+            prevNum = currNum;
+            currNum = temp;
+            index = index + (byte)1;
+            continue;
+            print("Shouldn't be printed");
+        }
+        whichFibNumber = whichFibNumber + (byte)1;
+    }
+}
+
+while (1 < 2){
+    print("Fibonacci numbers (alternative):");
+    int MaxFibNumberToPrint = 20;
+    int whichFibNumber = 1;
+    bool stop1 = false;
+    bool stop2 = false;
+
+    while (not (stop1 and stop2) or (false and not false and 3 < whichFibNumber)){
+        if (whichFibNumber == MaxFibNumberToPrint and not stop1){
+            stop1 = true;
+            continue;
+        } else {
+            if (stop1) {
+                stop2 = whichFibNumber == MaxFibNumberToPrint;
+                continue;
+            }
+        }
+        int index = 1;
+        int prevNum = 0;
+        int currNum = 1;
+        int temp;
+        while (index < whichFibNumber){
+            temp = currNum + prevNum;
+            prevNum = currNum;
+            currNum = temp;
+            if (stop1){
+                break;
+            } else {
+                int x;
+            }
+            index = index + 1;
+        }
+        printi(currNum);
+        whichFibNumber = whichFibNumber + 1;
+    }
+    return;
+}

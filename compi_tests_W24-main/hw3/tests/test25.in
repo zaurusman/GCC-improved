@@ -1,0 +1,5 @@
+
+int Int;
+int INT;
+byte Byte = 1 b;
+byte BYTE = 1 B;

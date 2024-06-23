@@ -1,0 +1,20 @@
+while (true)
+{
+    int x = 4;
+    byte y = 100 b;
+    if (x > y) print("ok");
+    if (y < x) {
+        int z = readi(x + y);
+        print("bad");
+        break;
+    }
+    int z;
+    continue;
+}
+if (true) {
+    bool x = true;
+    bool y = false;
+    if (y and x) x = (3 < 2) or (y and 5 >= 2 b);
+    else print("bad grade");
+    continue;
+}

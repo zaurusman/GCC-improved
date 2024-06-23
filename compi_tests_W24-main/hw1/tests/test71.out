@@ -1,0 +1,5 @@
+1 STRING 
+1 STRING "  """
+
+1 RELOP >
+Error undefined escape sequence x16

@@ -1,0 +1,18 @@
+
+if (3 b < 5b) int x0;
+if (3 b < 5) int x1;
+while (5 < 5b) int x2;
+while (5 < 5) int x3;
+if (3 b <= 5b) int x4;
+if (3 b <= 5) int x5;
+while (5 <= 5b) int x6;
+while (5 <= 5) int x7;
+if (3 b > 5b) int x8;
+if (3 b > 5) int x9;
+while (5 > 5b) int x10;
+while (5 > 5) int x11;
+if (3 b >= 5b) int x12;
+if (3 b >= 5) int x13;
+while (5 >= 5b) int x14;
+while (5 >= 5) int x15;
+if (true < 3) int x_shouldnt_be_printed;

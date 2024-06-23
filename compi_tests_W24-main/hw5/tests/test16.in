@@ -1,0 +1,22 @@
+    int num = 2;
+
+    while (num <= 100) {
+        int divisor = 2;
+        bool isPrime = true; // Assume num is prime initially
+
+        while (divisor * divisor <= num) {
+            if (num / divisor * divisor == num and num != divisor) {
+                isPrime = false; // If num is divisible by any number other than 1 and itself, it's not prime
+                break;
+            }
+            divisor = divisor + 1;
+        }
+
+        if (isPrime and num != 1) {
+            printi(num);
+        }
+
+        num = num + 1;
+    }
+
+    return;

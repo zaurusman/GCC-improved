@@ -1,0 +1,35 @@
+byte num1 = 1b;
+byte num2 = (byte)2;
+byte num3 = num1 + num2;
+printi(num1);
+printi(num2);
+printi(num3);
+int num4 = num3;
+printi(num4);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,7 @@
+
+int x_int;
+bytep x_byte;
+if (true) int x = x_int;
+if (true) byte y = x_byte;
+if (true) int z = x_byte;
+if (true) byte w = x_int;
