@@ -28,10 +28,13 @@
     COMMENT = 25,
     ID = 26,
     NUM = 27,
-    STRING = 28
+    STRING = 28,
+    STRING_START = 29,
+    STRING_END = 30,
+    ESCAPE = 31
   };
   extern int yylineno;
   extern char* yytext;
-  extern size_t yyleng;
+  extern int yyleng;
   extern int yylex();
 #endif /* TOKENS_HPP_ */
