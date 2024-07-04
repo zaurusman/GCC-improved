@@ -1,0 +1,6 @@
+1 ASSIGN =
+1 NUM 1
+1 ID YpMhawS7b8QtquY4wJSAEOqtwO6vDvLbg
+1 STRING 67515 return
+1 ID K4Pm
+Error \

@@ -1,0 +1,1061 @@
+//
+// Created by noaov on 21/11/2022.
+//
+
+#ifndef WET1_AVLTree_H
+#define WET1_AVLTree_H
+#include "utility"
+#include "wet1util.h"
+#include <math.h>
+#include <assert.h>
+#include <iostream>
+#include <math.h>
+
+#define ERROR -2
+
+template<class T, class K>
+class AVLTree {
+public:
+
+    class Node {
+    public:
+        Node(K key, T data) : key(key), parent(nullptr),data(data), left(nullptr), right(nullptr), prev(nullptr), next
+        (nullptr), height(0)
+        {}
+        ~Node();
+
+        Node(const Node& other)=delete;
+        Node operator=(const Node& other)=delete;
+        int getBalanceFactor();
+        Node* getLeft() const;
+        Node* getRight() const;
+        T getData() const;
+        K getKey() const;
+
+    private:
+        K key;
+        Node* parent;
+        T data;
+        Node *left;
+        Node *right;
+        Node *prev;
+        Node *next;
+        int height;
+        bool inSubTree(const K& key) const;
+        friend class AVLTree;
+
+        //written based on the assumption that the method works on
+        // the first node with a BF of 2 or -2
+        Node* roll();
+        //returns the new root
+        Node* llRoll();
+        Node* lrRoll();
+        Node* rrRoll();
+        Node* rlRoll();
+
+        void updateHeight();
+        Node* findNode(const K& key);
+        void deleteSubTree();
+        bool isLeaf() const;
+        void setLeft(Node* left);
+        void setRight(Node* right);
+        void setParent(Node* parent, bool isLeft);
+        Node* findMinNode(const K& minKey);
+   };
+
+    AVLTree();
+    ~AVLTree();
+    int getHeight() const;
+    int getSize() const;
+    AVLTree(const AVLTree& other)=delete;
+    AVLTree operator=(const AVLTree& other)=delete;
+    bool inTree(const K& key) const;
+    output_t<T*> insert(K key, T data);
+    StatusType remove(const K& key);
+    output_t<T*> find(const K& key);
+    output_t<const T*> find(const K& key) const;
+    void deleteTheTreesData();
+
+    //for knockout_winner get the first node that is bigger or equal to min
+    output_t<T*> makeDataArrFromMinToMax(K min, K max, int& size) const;
+
+    //newTree should be empty
+    template<class N, class M>
+    friend StatusType uniteAVLTrees(AVLTree<N,M>& tree1,AVLTree<N,M>& tree2, AVLTree<N,M>& newTree);
+
+    T* getNext(const K& key);
+    T* getPrev(const K& key);
+    void DoInorderTour(T* elemsArr, K* keysArr, int len);
+    const T* getMax() const;
+    T* getMin() const;
+    StatusType createFromSortedArray(K* keysArr,T* dataArr, int len);
+
+    //function for debugging the tree
+    bool checkTree();
+    bool isSizeValid();
+    bool isBalanced();
+    bool isSearchTree();
+    bool isHeightsValid();
+    bool isMinMaxValid();//assumes that the tree is a search tree
+    bool isParentsValid();
+    bool isNextPrevValid();//assumes that min & max are valid
+
+private:
+    Node *root;
+    Node *min;
+    Node *max;
+    int nodeCount;
+    void updateMinMax(Node* newNode);
+    Node* addRecursion(Node* node, Node* parent);
+    Node* remove(const K& key, Node* node);
+    Node* remove(Node *toRemove);
+    Node* removeHasBothBranches(Node *toRemove);
+    Node* removeHasOneBranch(Node *toRemove,Node* replacement);
+    void swap(Node* toRemove,Node* replacement);
+    void swapParentRight(Node* parent,Node* right);
+    void swapNotDirectChild(Node* a,Node* b);
+    Node* createFromSortedArray(Node *parent, Node**, int len);
+
+    //function for debugging the tree
+    bool isBalanced(Node* node);
+    bool isSearchTree(Node* node);
+    bool isParentsValid(Node* node);
+    bool isNextPrevValid(Node* node);//assumes that min & max are valid
+    int checkHeights(Node* node);
+    int checkSize(Node* node);
+};
+
+template<class T, class K>
+const T* AVLTree<T,K>::getMax() const
+{
+    if(max == nullptr)
+        return nullptr;
+    return &(max->data);
+}
+
+template<class T, class K>
+T* AVLTree<T,K>::getMin() const
+{
+    if(min == nullptr)
+        return nullptr;
+    return &(min->data);
+}
+
+
+template<class T, class K>
+typename AVLTree<T,K>::Node* AVLTree<T, K>::Node::findNode(const K& key)
+{
+    if(this->key == key)
+        return this;
+    if(left != nullptr && key < this->key)
+        return left->findNode(key);
+    if(right != nullptr && this->key < key)
+        return right->findNode(key);
+    return nullptr;
+}
+
+template<class T, class K>
+output_t<T*> AVLTree<T, K>::find(const K& key)
+{
+    if(root == nullptr)
+        return output_t<T*>(StatusType::FAILURE);
+    Node* node = root->findNode(key);
+    if(node == nullptr)
+        return output_t<T*>(StatusType::FAILURE);
+    return output_t<T*>(&(node->data));
+}
+
+template<class T, class K>
+output_t<const T *> AVLTree<T, K>::find(const K &key) const
+{
+    if(root == nullptr)
+        return output_t<const T*>(StatusType::FAILURE);
+    Node* node = root->findNode(key);
+    if(node == nullptr)
+        return output_t<const T*>(StatusType::FAILURE);
+    return output_t<const T*>(&(node->data));
+}
+
+template<class T, class K>
+void merge(K* keysArr1,T* elemsArr1, int n1, K* keysArr2, T* elemsArr2, int n2, K* keysOutput, T* elemsOutput)
+{
+    int i1 = 0;
+    int i2 = 0;
+    int i3 = 0;
+
+    while (i1 < n1 && i2 < n2)
+    {
+        assert(!(keysArr1[i1] == keysArr2[i2]));
+        if (keysArr1[i1] < keysArr2[i2])
+        {
+            elemsOutput[i3] = elemsArr1[i1];
+            keysOutput[i3++] = keysArr1[i1++];
+        }
+        else
+        {
+            elemsOutput[i3] = elemsArr2[i2];
+            keysOutput[i3++] = keysArr2[i2++];
+        }
+    }
+
+    for (;i1<n1;++i1)
+    {
+            elemsOutput[i3] = elemsArr1[i1];
+            keysOutput[i3++] = keysArr1[i1];
+    }
+    for (;i2<n2;++i2)
+    {
+            elemsOutput[i3] = elemsArr2[i2];
+            keysOutput[i3++] = keysArr2[i2];
+    }
+}
+
+
+template<class T, class K>
+StatusType uniteAVLTrees(AVLTree<T,K>& tree1,AVLTree<T,K>& tree2, AVLTree<T,K>& newTree)
+{
+   assert(newTree.root == nullptr);
+   int n1 = tree1.nodeCount;
+   int n2 = tree2.nodeCount;
+   if (n1 == 0 && n2 == 0)
+    return StatusType::SUCCESS;
+   T* tree1ElementsArr;
+   K* tree1KeysArr;
+   T* tree2ElementsArr;
+   K* tree2KeysArr;
+   T* newTreeElementsArr;
+   K* newTreeKeysArr;
+   try
+    {
+        tree1ElementsArr = new T[n1];  
+    }
+    catch(const std::bad_alloc& e)
+    {
+        return StatusType::ALLOCATION_ERROR;
+    }
+    try
+    {
+        tree1KeysArr = new K[n1]; 
+    }
+    catch(const std::bad_alloc& e)
+    {
+        delete[] tree1ElementsArr;
+        return StatusType::ALLOCATION_ERROR;
+    }
+    try
+    {
+        tree2ElementsArr = new T[n2];  
+    }
+    catch(const std::bad_alloc& e)
+    {
+        delete[] tree1KeysArr;
+        delete[] tree1ElementsArr;
+        return StatusType::ALLOCATION_ERROR;
+    }
+    try
+    {
+        tree2KeysArr = new K[n2];  
+    }
+    catch(const std::bad_alloc& e)
+    {
+        delete[] tree1KeysArr;
+        delete[] tree1ElementsArr;
+        delete[] tree2ElementsArr;
+        return StatusType::ALLOCATION_ERROR;
+    }
+    try
+    {
+        newTreeElementsArr = new T[n1+n2];
+    }
+    catch(const std::bad_alloc& e)
+    {
+        delete[] tree1ElementsArr;
+        delete[] tree1KeysArr;
+        delete[] tree2ElementsArr;
+        delete[] tree2KeysArr;
+        return StatusType::ALLOCATION_ERROR;
+    }
+    try
+    {
+        newTreeKeysArr = new K[n1+n2];    
+    }
+    catch(const std::bad_alloc& e)
+    {
+        delete[] tree1ElementsArr;
+        delete[] tree1KeysArr;
+        delete[] tree2ElementsArr;
+        delete[] tree2KeysArr;
+        delete[] newTreeElementsArr;
+        return StatusType::ALLOCATION_ERROR;
+    }
+   tree1.DoInorderTour(tree1ElementsArr,tree1KeysArr,n1);
+   tree2.DoInorderTour(tree2ElementsArr,tree2KeysArr,n2);
+   merge(tree1KeysArr,tree1ElementsArr,n1,tree2KeysArr,tree2ElementsArr,n2,newTreeKeysArr,newTreeElementsArr);
+   StatusType stat = newTree.createFromSortedArray(newTreeKeysArr, newTreeElementsArr, n1+n2);
+   delete[] tree1ElementsArr;
+   delete[] tree1KeysArr;
+   delete[] tree2ElementsArr;
+   delete[] tree2KeysArr;
+   delete[] newTreeElementsArr;
+   delete[] newTreeKeysArr;
+   return stat;
+}
+
+
+
+template<class T, class K>
+StatusType AVLTree<T, K>::createFromSortedArray(K *keysArr, T *dataArr, int len)
+{
+    assert(root == nullptr);
+    Node** nodes;
+    try{
+        nodes = new Node*[len];
+    }
+    catch (std::bad_alloc& e) {
+        return StatusType::ALLOCATION_ERROR;
+    }
+    int i = 0;
+    try{
+        for (; i < len; ++i) {
+            nodes[i] = new Node(keysArr[i],dataArr[i]);
+            if(i!=0){
+                nodes[i]->prev = nodes[i-1];
+                nodes[i-1]->next = nodes[i];
+            }
+        }
+    }
+    catch(std::bad_alloc& e){
+        for (int j=0; j < i; ++j) {
+            delete nodes[j];
+        }
+        delete[] nodes;
+        return StatusType::ALLOCATION_ERROR;
+    }
+    root = nodes[len/2];
+    min = nodes[0];
+    max = nodes[len-1];
+    nodeCount = len;
+    root->left = createFromSortedArray(root,nodes,len/2);
+    root->right = createFromSortedArray(root,nodes+(len/2+1),len-len/2-1);
+    root->updateHeight();
+    delete[] nodes;
+    return StatusType::SUCCESS;
+}
+
+template<class T, class K>
+typename AVLTree<T, K>::Node* AVLTree<T, K>::createFromSortedArray(AVLTree::Node *parent, AVLTree<T,K>::Node** nodes, int len)
+{
+        if (len == 0){
+            return nullptr;
+        }
+        int i = len/2;
+        nodes[i]->left = createFromSortedArray(nodes[i],nodes,len/2);
+        nodes[i]->right = createFromSortedArray(nodes[i],nodes+(len/2+1),len-len/2-1);
+        nodes[i]->updateHeight();
+        nodes[i]->parent = parent;
+        return nodes[i];
+}
+
+template<class T, class K>
+int AVLTree<T, K>::Node::getBalanceFactor()
+{
+    int leftHeight = left != nullptr ? left->height : -1;
+    int rightHeight = right != nullptr ? right->height : -1;
+    return leftHeight - rightHeight;
+}
+
+template<class T, class K>
+output_t<T*> AVLTree<T, K>::insert(K key, T data)
+{
+    if(inTree(key))
+        return output_t<T*>(StatusType::FAILURE);
+    Node* node;
+    try {
+        node = new Node(key,data);
+    }
+    catch (std::bad_alloc& e){
+        return output_t<T*>(StatusType::ALLOCATION_ERROR);
+    }
+    Node* newRoot = addRecursion(node, root);
+    node->updateHeight();
+    assert(newRoot != nullptr);
+    if(node->prev != nullptr)
+        node->prev->next = node;
+    if(node->next != nullptr)
+        node->next->prev = node;
+    root = newRoot;
+    nodeCount++;
+    updateMinMax(node);
+    return output_t<T*>(&(node->data));
+}
+
+template<class T, class K>
+typename AVLTree<T, K>::Node* AVLTree<T, K>::addRecursion(AVLTree<T, K>::Node* node, AVLTree<T, K>::Node* parent)
+{
+    if(parent == nullptr)
+        return node;
+    if (node->key < parent->key) {
+        node->next = parent;
+        parent->left = addRecursion(node, parent->left);
+        assert(parent->left != nullptr);
+        parent->left->parent = parent;
+    }
+    if (parent->key < node->key) {
+        node->prev = parent;
+        parent->right = addRecursion(node, parent->right);
+        assert(parent->right != nullptr);
+        parent->right->parent = parent;
+    }
+    parent->updateHeight();
+    return parent->roll();
+}
+
+template<class T, class K>
+typename AVLTree<T,K>::Node* AVLTree<T,K>::Node::roll() //magic numbers?
+{
+    assert(this != nullptr);
+    int bf = getBalanceFactor();
+    if (bf == 2)
+    {
+        assert(left != nullptr);
+        int leftSonBF = left->getBalanceFactor();
+        if (leftSonBF >= 0)
+            return llRoll();
+        else
+            return lrRoll();
+    }
+    else if(bf == -2)
+    {
+        assert(bf == -2);
+        assert(right != nullptr);
+        int rightSonBF = right->getBalanceFactor();
+        if (rightSonBF <= 0)
+            return rrRoll();
+        else
+            return rlRoll();
+    }
+    else
+        return this;
+}
+
+template<class T, class K>
+typename AVLTree<T,K>::Node* AVLTree<T,K>::Node::llRoll()
+{
+    assert(left != nullptr);
+    Node* newRoot = left;
+    left = newRoot->right;
+    if(newRoot->right != nullptr)
+        newRoot->right->parent = this;
+    newRoot->right = this;
+    newRoot->parent = parent;
+    parent = newRoot;
+    updateHeight();
+    newRoot->updateHeight();
+    return newRoot;
+}
+
+template<class T, class K>
+typename AVLTree<T,K>::Node* AVLTree<T,K>::Node::rrRoll()
+{
+    Node* newRoot = right;
+    right = newRoot->left;
+    if(newRoot->left != nullptr)
+        newRoot->left->parent = this;
+    newRoot->left = this;
+    newRoot->parent = parent;
+    parent = newRoot;
+    updateHeight();
+    newRoot->updateHeight();
+    return newRoot;
+}
+
+template<class T, class K>
+typename AVLTree<T,K>::Node* AVLTree<T,K>::Node::lrRoll()
+{
+    left = left->rrRoll();
+    return llRoll();
+}
+
+template<class T, class K>
+typename AVLTree<T,K>::Node* AVLTree<T,K>::Node::rlRoll()
+{
+    right = right->llRoll();
+    return rrRoll();
+}
+
+template<class T, class K>
+void AVLTree<T,K>::Node::updateHeight()
+{
+    if (left == nullptr && right == nullptr)
+    {
+        height = 0;
+        return;
+    }
+    if (left == nullptr)
+    {
+        height = 1 + right->height;
+        return;
+    }
+    if (right == nullptr)
+    {
+        height = 1 + left->height;
+        return;
+    }
+    
+    height = 1 + ((left->height > right->height) ? left->height : right->height);
+}
+
+template<class T, class K>
+typename AVLTree<T,K>::Node* AVLTree<T, K>::Node::getLeft() const
+{
+    return left;
+}
+
+template<class T, class K>
+typename AVLTree<T,K>::Node* AVLTree<T, K>::Node::getRight() const
+{
+    return right;
+}
+
+template<class T, class K>
+T AVLTree<T, K>::Node::getData() const
+{
+    return data;
+}
+
+template<class T, class K>
+K AVLTree<T, K>::Node::getKey() const
+{
+    return key;
+}
+
+template<class T, class K>
+void AVLTree<T,K>::DoInorderTour(T* elemsArr, K* keysArr, int len)
+{
+    int index = 0;
+    if (len == 0)
+        return;
+    inorder(root,index,elemsArr,keysArr, len);
+}
+
+
+template<class T, class K>
+void inorder(typename AVLTree<T,K>::Node* p, int& index, T* elemsArr, K* keysArr, int len)
+{
+    assert(elemsArr != nullptr || keysArr != nullptr);
+    if (p == nullptr || index >= len)
+        return;
+
+    inorder(p->getLeft(), index, elemsArr, keysArr,len);
+    if (keysArr != nullptr)
+    {
+        keysArr[index] = p->getKey();
+    }
+    if (elemsArr != nullptr)
+    {
+        elemsArr[index] = p->getData();
+    }
+    ++index;
+    inorder(p->getRight(), index, elemsArr, keysArr,len);
+}
+
+template<class T, class K>
+bool AVLTree<T, K>::inTree(const K& key) const
+{
+    if(root == nullptr)
+        return false;
+    return root->inSubTree(key);
+}
+
+template<class T, class K>
+AVLTree<T, K>::AVLTree():root(nullptr),min(nullptr),max(nullptr),nodeCount(0)
+{
+}
+
+template<class T, class K>
+void AVLTree<T, K>::updateMinMax(AVLTree::Node *newNode)
+{
+    assert(!(min != nullptr && min->key == newNode->key));
+    assert(!(max != nullptr && max->key == newNode->key));
+    if(min == nullptr || newNode->key < min->key)
+        min = newNode;
+    if(max == nullptr || max->key < newNode->key)
+        max = newNode;
+}
+
+template<class T, class K>
+bool AVLTree<T, K>::Node::inSubTree(const K& key) const
+{
+    if(this->key == key)
+        return true;
+    if(left != nullptr && key < this->key)
+        return left->inSubTree(key);
+    if(right != nullptr && this->key < key)
+        return right->inSubTree(key);
+    return false;
+}
+
+template<class T, class K>
+AVLTree<T, K>::Node::~Node()
+{
+    if(prev!= nullptr)
+        prev->next = next;
+    if(next!= nullptr)
+        next->prev = prev;
+}
+
+template<class T, class K>
+AVLTree<T, K>::~AVLTree()
+{
+    if(root != nullptr){
+        root->deleteSubTree();
+        delete root;
+    }
+}
+
+template<class T,class K>
+void AVLTree<T,K>::deleteTheTreesData()
+{
+    Node* node = min;
+    while (node != nullptr)
+    {
+        delete node->data;
+        node = node->next;
+    }
+}
+
+template<class T, class K>
+void AVLTree<T, K>::Node::deleteSubTree()
+{
+    if(left != nullptr){
+        left->deleteSubTree();
+        delete left;
+    }
+    if(right != nullptr) {
+        right->deleteSubTree();
+        delete right;
+    }
+}
+
+template<class T, class K>
+bool AVLTree<T, K>::Node::isLeaf() const
+{
+    return left == nullptr && right == nullptr;
+}
+
+template<class T, class K>
+StatusType AVLTree<T, K>::remove(const K& key)
+{
+    Node* toRemove = root->findNode(key);
+    if(toRemove == nullptr)
+        return StatusType::FAILURE;
+    if(min == toRemove)
+        min = toRemove->next;
+    if(max == toRemove)
+        max = toRemove->prev;
+    root = remove(key, root);
+    nodeCount--;
+    return StatusType::SUCCESS;
+}
+
+template<class T, class K>
+typename AVLTree<T,K>::Node* AVLTree<T, K>::remove(const K& key, AVLTree<T,K>::Node *node)
+{
+    assert(node != nullptr);
+    if(key == node->key){
+        node = remove(node);
+        if(node == nullptr)
+            return nullptr;
+    }
+    else if(key < node->key) {
+        node->setLeft(remove(key, node->left));
+    }
+    else if(node->key < key)
+        node->setRight(remove(key,node->right));
+    node->updateHeight();
+    return node->roll(); //roll only if needed
+}
+
+template<class T, class K>
+typename AVLTree<T,K>::Node* AVLTree<T, K>::remove(AVLTree<T,K>::Node *toRemove)
+{
+    assert(toRemove != nullptr);
+
+    if(toRemove->isLeaf()) {
+        delete toRemove;
+        return nullptr;
+    }
+    if(toRemove->left != nullptr && toRemove->right != nullptr)//has both branches
+        return removeHasBothBranches(toRemove);
+    if(toRemove->left != nullptr)//has only left branch
+        return removeHasOneBranch(toRemove,toRemove->left);
+    else//has only right branch
+        return removeHasOneBranch(toRemove,toRemove->right);
+}
+
+template<class T, class K>
+typename AVLTree<T,K>::Node* AVLTree<T, K>::removeHasBothBranches(AVLTree<T,K>::Node *toRemove)
+{
+    assert(toRemove != nullptr);
+    assert(toRemove->left != nullptr);
+    assert(toRemove->right != nullptr);
+    assert(toRemove->next != nullptr);
+
+    Node* replacement = toRemove->next;
+    swap(toRemove,replacement);
+
+    assert(toRemove->left == nullptr);
+    replacement->right = remove(toRemove->key,replacement->right);
+    return replacement;
+}
+
+template<class T, class K>
+typename AVLTree<T,K>::Node* AVLTree<T, K>::removeHasOneBranch(AVLTree<T,K>::Node *toRemove,AVLTree<T,K>::Node
+*replacement)
+{
+    assert((toRemove->right != nullptr && toRemove->left == nullptr)
+    ||(toRemove->right == nullptr && toRemove->left != nullptr));
+    assert(toRemove->left == replacement || toRemove->right==replacement);
+
+    if(toRemove->parent != nullptr){
+        if(toRemove->parent->right == toRemove)
+            toRemove->parent->right = replacement;
+        else if(toRemove->parent->left == toRemove)
+            toRemove->parent->left = replacement;
+    }
+    replacement->parent = toRemove->parent;
+    delete toRemove;
+    return replacement;
+}
+
+template<class T, class K>
+T* AVLTree<T, K>::getNext(const K& key)
+{
+    if(root == nullptr)
+        return nullptr;
+    Node* node = root->findNode(key);
+    if(node == nullptr || node->next == nullptr)
+        return nullptr;
+    return &(node->next->data);
+}
+
+template<class T, class K>
+T* AVLTree<T, K>::getPrev(const K& key)
+{
+    if(root == nullptr)
+        return nullptr;
+    Node* node = root->findNode(key);
+    if(node == nullptr || node->prev == nullptr)
+        return nullptr;
+    return &(node->prev->data);
+}
+
+template<class T, class K>
+int AVLTree<T, K>::getHeight() const
+{
+    if(root == nullptr)
+        return -1;
+    else
+        return root->height;
+}
+
+template<class T, class K>
+int AVLTree<T, K>::getSize() const
+{
+    return nodeCount;
+}
+
+template<class T, class K>
+void AVLTree<T, K>::swap(AVLTree::Node *toRemove, AVLTree::Node *replacement)
+{
+    assert(toRemove != nullptr);
+    assert(replacement != nullptr);
+
+    if(toRemove->right == replacement){
+        swapParentRight(toRemove,replacement);
+    }
+    else{
+        swapNotDirectChild(toRemove,replacement);
+    }
+}
+
+template<class T, class K>
+void AVLTree<T,K>::swapParentRight(AVLTree::Node* parent,AVLTree::Node* right){
+    Node* rightSon = right->right;
+    Node* leftSon = right->left;
+    bool isLeft = false;
+    if (parent->parent != nullptr)
+    {
+        if (parent->parent->left == parent)
+            isLeft = true;
+    }
+    right->setParent(parent->parent,isLeft);
+    right->setRight(parent);
+    right->setLeft(parent->left);
+
+    parent->setRight(rightSon);
+    parent->setLeft(leftSon);
+
+    right->updateHeight();
+    parent->updateHeight();
+}
+
+template<class T, class K>
+void AVLTree<T,K>::swapNotDirectChild(AVLTree::Node* a,AVLTree::Node* b){
+    Node* bRight = b->right;
+    Node* bLeft = b->left;
+    Node* bParent = b->parent;
+    bool isBLeftChild = b->parent == nullptr || b->parent->left == b;
+
+    b->setLeft(a->left);
+    b->setRight(a->right);
+    bool isALeftChild = a->parent == nullptr || a->parent->left == a;
+    b->setParent(a->parent,isALeftChild);
+
+    a->setParent(bParent,isBLeftChild);
+    a->setRight(bRight);
+    a->setLeft(bLeft);
+    a->updateHeight();
+    b->updateHeight();
+}
+
+
+template<class T, class K>
+void AVLTree<T, K>::Node::setLeft(AVLTree::Node *left)
+{
+    this->left = left;
+    if(left != nullptr)
+        left->parent = this;
+}
+
+template<class T, class K>
+void AVLTree<T, K>::Node::setRight(AVLTree::Node *right)
+{
+    this->right = right;
+    if(right != nullptr)
+        right->parent = this;
+}
+
+template<class T, class K>
+void AVLTree<T, K>::Node::setParent(AVLTree::Node *parent,bool isLeft)
+{
+    this->parent = parent;
+    if(parent != nullptr){
+        if(isLeft)
+            parent->left = this;
+        else
+            parent->right = this;
+    }
+}
+
+template<class T, class K>
+typename AVLTree<T,K>::Node* AVLTree<T, K>::Node::findMinNode(const K& minKey)
+{
+    Node* minOfBranch;
+    if(minKey < this->key){
+        if(left == nullptr)
+            return this;
+        minOfBranch = left->findMinNode(minKey);
+        if(minOfBranch == nullptr)
+            return this;
+        else
+            return minOfBranch;
+    }
+    if(this->key < minKey){
+        if(right == nullptr)
+            return nullptr;
+        return right->findMinNode(minKey);
+    }
+    return this;
+}
+
+template <class T,class K>
+output_t<T*> AVLTree<T,K>::makeDataArrFromMinToMax(K min, K max, int& size) const
+{
+    if (root == nullptr)
+    {
+        return StatusType::FAILURE;
+    }
+    Node* minNode = root->findMinNode(min);
+    if (minNode == nullptr)
+    {
+        return StatusType::FAILURE;
+    }
+    int sizeOfArr = 0;
+    Node* node = minNode;
+    while (node != nullptr && (node->key < max || node->key == max))
+    {
+        ++sizeOfArr;
+        node = node->next;
+    }
+    T* dataArr;
+    try
+    {
+        dataArr = new T[sizeOfArr];
+    }
+    catch(const std::bad_alloc& e)
+    {
+        return StatusType::ALLOCATION_ERROR;
+    }
+    node = minNode;
+    int index = 0;
+    while (node != nullptr && (node->key < max || node->key == max))
+    {
+        assert(index < sizeOfArr);
+        dataArr[index++] = node->getData();
+        node = node->next;
+    }
+    size = sizeOfArr;
+    return dataArr;
+}
+
+
+//*************************Debugging functions********************************
+template<class T, class K>
+bool AVLTree<T, K>::isBalanced(AVLTree<T, K>::Node* node)
+{
+    if(node == nullptr)
+        return true;
+    int bf = node->getBalanceFactor();
+    if(bf < -1 || bf > 1)
+        return false;
+    return isBalanced(node->left) && isBalanced(node->right);
+}
+
+template<class T, class K>
+bool AVLTree<T, K>::isSearchTree(AVLTree::Node *node)
+{
+    if(node == nullptr)
+        return true;
+    if(node->left != nullptr && (node->key < node->left->key || node->key == node->left->key))
+        return false;
+    if(node->right != nullptr && (node->right->key < node->key || node->key == node->right->key))
+        return false;
+    return isSearchTree(node->left) && isSearchTree(node->right);
+}
+
+template<class T, class K>
+int AVLTree<T, K>::checkHeights(AVLTree::Node *node)
+{
+    if(node == nullptr)
+        return -1;
+    int heightL = checkHeights(node->left);
+    int heightR = checkHeights(node->right);
+
+    if(node->height != 1 + int(fmax(heightL,heightR)) || heightL == ERROR || heightR == ERROR)
+        return ERROR;
+    return node->height;
+}
+
+template<class T, class K>
+int AVLTree<T, K>::checkSize(AVLTree::Node *node)
+{
+    if(node == nullptr)
+        return 0;
+    int sizeL = checkSize(node->left);
+    int sizeR = checkSize(node->right);
+    return 1 + sizeL + sizeR;
+}
+
+template<class T, class K>
+bool AVLTree<T, K>::isSizeValid(){
+    if(root == nullptr)
+        return nodeCount == 0;
+    return checkSize(root) == nodeCount;
+}
+
+template<class T, class K>
+bool AVLTree<T, K>::isBalanced()
+{
+    if(root == nullptr)
+        return true;
+    return isBalanced(root);
+}
+
+template<class T, class K>
+bool AVLTree<T, K>::isSearchTree()
+{
+    if(root == nullptr)
+        return true;
+    return isSearchTree(root);
+}
+
+template<class T, class K>
+bool AVLTree<T, K>::isHeightsValid()
+{
+    if(root == nullptr)
+        return true;
+    return checkHeights(root) != ERROR;
+}
+
+template<class T, class K>
+bool AVLTree<T, K>::isMinMaxValid()
+{
+    if(root == nullptr)
+        return this->min== nullptr && this->max== nullptr;
+    Node* tempMin = root;
+    while(tempMin->left != nullptr)
+        tempMin = tempMin->left;
+    Node* tempMax = root;
+    while(tempMax->right != nullptr)
+        tempMax = tempMax->right;
+    return tempMin == this->min && tempMax == this->max;
+}
+
+template<class T, class K>
+bool AVLTree<T, K>::isParentsValid(AVLTree::Node *node)
+{
+    if(node == nullptr)
+        return true;
+    if(node->parent == nullptr && node != root)
+        return false;
+    if(node->parent != nullptr && (node->parent->left != node && node->parent->right != node)
+       && !(node->parent->left == node && node->parent->right == node))
+        return false;
+    return isParentsValid(node->left) && isParentsValid(node->right);
+}
+
+template<class T, class K>
+bool AVLTree<T, K>::isNextPrevValid(AVLTree::Node *node)
+{
+    if(node == nullptr)
+        return true;
+    if(node->next == nullptr && node != max)
+        return false;
+    if(node->prev == nullptr && node != min)
+        return false;
+    if(node->next != nullptr && ((node->next->prev != node) || node->next->key < node->key ||
+                                 node->next->key == node->key))
+        return false;
+    return isNextPrevValid(node->next);
+}
+
+template<class T, class K>
+bool AVLTree<T, K>::isParentsValid()
+{
+    return isParentsValid(root);
+}
+
+//assumes that min & max are valid
+template<class T, class K>
+bool AVLTree<T, K>::isNextPrevValid()
+{
+    return isNextPrevValid(min);
+}
+
+template<class T, class K>
+bool AVLTree<T, K>::checkTree()
+{
+    bool search = isSearchTree();
+    bool heights = isHeightsValid();
+    bool minMax = isMinMaxValid();
+    bool parents = isParentsValid();
+    bool nextPrev = isNextPrevValid();
+    bool size = isSizeValid();
+    bool bf = isBalanced();
+    return search && heights && minMax && parents && nextPrev && size && bf;
+}
+
+
+
+#endif //WET1_AVLTree_H

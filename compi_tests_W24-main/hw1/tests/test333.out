@@ -1,0 +1,9 @@
+1 ELSE else
+1 BINOP *
+1 RELOP >=
+1 OR or
+1 STRING 
+ VDIeVM6Bl59HZ 18347 68747 
+ 
+1 NUM 64342
+Error \

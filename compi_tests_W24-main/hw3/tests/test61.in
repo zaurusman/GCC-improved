@@ -1,0 +1,4 @@
+
+if (true) int x = 3b + 5;//
+if (false) byte y = 3b + 5b;
+if (false) byte z = 3b + 5;

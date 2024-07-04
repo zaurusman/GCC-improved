@@ -1,0 +1,4 @@
+1 VOID void
+1 RBRACE }
+1 STRING XQAAoY
+Error \

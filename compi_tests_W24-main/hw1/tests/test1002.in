@@ -1,0 +1,268 @@
+#include <malloc.h>
+#include <assert.h>
+#include "RLEList.h"
+#define NULL_LIST -1
+#define SHOULDNT_GET_HERE -1
+#define MINIMUM_CHARS_PER_NODE 3
+#define TO_CHAR '0'
+#define NO_REPEATS -1
+#define NO_LETTER '\0'
+#define INDEX_STARTING_VALUE -1
+#define NEW_LINE '\n'
+
+static RLEList getLastNode(RLEList list);
+static RLEListResult removeNextNode(RLEList node);
+static void setResultMessage (RLEListResult *result, RLEListResult message);
+static int charsNeededForEncodedString (RLEList list);
+static void putLetterRepeatsInString (char* string, int letterRepeats, int* index);
+
+struct RLEList_t{
+    struct RLEList_t* next;
+    char letter;
+    int letterRepeats;
+};
+
+void RLEListDestroy(RLEList list)
+{
+    while (list)
+    {
+        RLEList nodeToDelete = list;
+        list = list->next;
+        free(nodeToDelete);
+    }
+}
+
+int RLEListSize(RLEList list)
+{
+    if (list == NULL)
+    {
+        return NULL_LIST;
+    }
+
+    RLEList currentNode = list->next;
+    int length = 0;
+    while (currentNode)
+    {
+        assert(currentNode->letterRepeats > 0);
+        length += currentNode->letterRepeats;
+        currentNode = currentNode->next;
+    }
+    return length;
+}
+
+char RLEListGet(RLEList list, int index, RLEListResult *result){
+    int listLength = RLEListSize(list);
+    if (list == NULL)
+    {
+        setResultMessage(result, RLE_LIST_NULL_ARGUMENT);
+        return 0;
+    }
+
+    else if (index < 0 || index > listLength-1)
+    {
+        setResultMessage(result,RLE_LIST_INDEX_OUT_OF_BOUNDS);
+        return 0;
+    }
+
+    list = list->next;
+    int currentIndex = INDEX_STARTING_VALUE;
+    while (currentIndex < index)
+    {
+        assert(list != NULL);
+        if (currentIndex + list->letterRepeats >= index)
+        {
+            setResultMessage(result, RLE_LIST_SUCCESS);
+            return list->letter;
+        }
+        currentIndex += list->letterRepeats;
+        list = list->next;
+    }
+
+    return SHOULDNT_GET_HERE;
+
+}
+
+char* RLEListExportToString(RLEList list, RLEListResult* result)
+{
+    if (list == NULL)
+    {
+        setResultMessage(result,RLE_LIST_NULL_ARGUMENT);
+        return NULL;
+    }
+    int numberOfCharsNeeded = charsNeededForEncodedString(list);
+    char* encodedStringFromRLEList = malloc(sizeof(char) * numberOfCharsNeeded);
+    if (encodedStringFromRLEList == NULL)
+    {
+        setResultMessage(result,RLE_LIST_OUT_OF_MEMORY);
+        return NULL;
+    }
+    int indexInString = 0;
+    list = list->next;
+    while (list != NULL)
+    {
+        assert(indexInString + MINIMUM_CHARS_PER_NODE < numberOfCharsNeeded);
+        encodedStringFromRLEList[indexInString] = list->letter;
+        ++indexInString;
+        putLetterRepeatsInString(encodedStringFromRLEList, list->letterRepeats, &indexInString);
+        encodedStringFromRLEList[indexInString] = NEW_LINE;
+        ++indexInString;
+        list= list->next;
+    }
+    setResultMessage(result,RLE_LIST_SUCCESS);
+    encodedStringFromRLEList[indexInString] = 0;
+    return encodedStringFromRLEList;
+}
+
+static void putLetterRepeatsInString (char* string, int letterRepeats, int* index)
+{
+    assert(letterRepeats > 0);
+    int tmpLetterRepeats = letterRepeats;
+    while (tmpLetterRepeats / 10 > 0)
+    {
+        ++*index;
+        tmpLetterRepeats /= 10;
+    }
+    int tmpIndex = *index;
+    while (letterRepeats > 0)
+    {
+        string[tmpIndex] = (letterRepeats % 10) + TO_CHAR;
+        letterRepeats /= 10;
+        --tmpIndex;
+    }
+    ++*index;
+}
+
+static int charsNeededForEncodedString (RLEList list)
+{
+    int length = 1;
+    if (list == NULL)
+    {
+        return 0;
+    }
+    list = list->next;
+    while (list != NULL)
+    {
+        assert(list->letterRepeats > 0);
+        length += MINIMUM_CHARS_PER_NODE;
+        int currentLetterRepeats = list -> letterRepeats;
+        while (currentLetterRepeats / 10 > 0)
+        {
+            length++;
+            currentLetterRepeats /= 10;
+        }
+        list = list->next;
+    }
+    return length;
+}
+
+RLEList RLEListCreate(){
+    RLEList list = malloc(sizeof(*list));
+    if(list == NULL){
+        return NULL;
+    }
+    list->letterRepeats = NO_REPEATS;
+    list->letter = NO_LETTER;
+    list->next = NULL;
+    return list;
+}
+
+RLEListResult RLEListAppend(RLEList list, char value){
+    if(list == NULL || value == NO_LETTER){
+        return RLE_LIST_NULL_ARGUMENT;
+    }
+    RLEList lastNode = getLastNode(list);
+    assert(lastNode->next == NULL);
+    if(lastNode != list && lastNode->letter == value){
+        assert(lastNode->letterRepeats >= 1);
+        lastNode->letterRepeats++;
+        return RLE_LIST_SUCCESS;
+    }
+    RLEList newNode = malloc(sizeof(*newNode));
+    if(newNode == NULL){
+        return RLE_LIST_OUT_OF_MEMORY;
+    }
+    newNode->next = NULL;
+    newNode->letter = value;
+    newNode->letterRepeats = 1;
+    lastNode->next = newNode;
+    return RLE_LIST_SUCCESS;
+}
+
+static RLEList getLastNode(RLEList list){
+    assert(list != NULL);
+    RLEList node = list;
+    while(node->next != NULL){
+        node = node->next;
+    }
+    return node;
+}
+
+RLEListResult RLEListRemove(RLEList list, int index){
+    if(list == NULL){
+        return RLE_LIST_NULL_ARGUMENT;
+    }
+    if(index >= RLEListSize(list) || index < 0){
+        return RLE_LIST_INDEX_OUT_OF_BOUNDS;
+    }
+    assert(list->next != NULL);
+    RLEList node = list->next;
+    RLEList previousNode = list;
+    assert(node->letterRepeats > 0);
+    int counter = node->letterRepeats;
+    while (counter-1 < index){
+        assert(node->next != NULL);
+        node = node->next;
+        previousNode = previousNode->next;
+        assert(node->letterRepeats > 0);
+        counter += node->letterRepeats;
+    }
+    if(node->letterRepeats > 1){
+        node->letterRepeats--;
+        return RLE_LIST_SUCCESS;
+    }
+    return removeNextNode(previousNode);
+}
+
+static RLEListResult removeNextNode(RLEList node){
+    assert(node->next != NULL);
+    RLEList nodeToRemove = node->next;
+    node->next = nodeToRemove->next;
+    free(nodeToRemove);
+    RLEList nextNode = node->next;
+    if(nextNode != NULL && node->letter == nextNode->letter){
+        node->letterRepeats+=nextNode->letterRepeats;
+        removeNextNode(node);
+    }
+    return RLE_LIST_SUCCESS;
+}
+
+static void setResultMessage (RLEListResult *result, RLEListResult message)
+{
+    if (result != NULL)
+    {
+        *result = message;
+    }
+}
+
+RLEListResult RLEListMap(RLEList list, MapFunction map_function){
+    if(list == NULL || map_function == NULL){
+        return RLE_LIST_NULL_ARGUMENT;
+    }
+    RLEList previousNode = list;
+    RLEList node = list->next;
+    while(node != NULL){
+        node->letter = map_function(node->letter);
+        if(previousNode != list && node->letter == previousNode->letter){
+            assert(previousNode->letterRepeats > 0);
+            assert(node->letterRepeats > 0);
+            previousNode->letterRepeats += node->letterRepeats;
+            removeNextNode(previousNode);
+            node = previousNode->next;
+        }
+        else{
+            previousNode = node;
+            node = node->next;
+        }
+    }
+    return RLE_LIST_SUCCESS;
+}

@@ -1,0 +1,29 @@
+int t;
+while (t > 3){
+	if (t < 3){
+		t = t + 1;
+		continue;
+	} else {
+		int a;
+		{
+			int c;
+			{
+				int d;
+				break;
+				printi(t);
+				print("ADSFKASDKLFA");
+				printi(a);
+				bool e;
+			}
+			bool e;
+		}
+		bool c;
+	}
+	printi(a);
+	bool a;
+}
+printi(t);
+printi(a);
+bool x;
+x = 4 / 2 > 7 + 3;
+if (x > 1) print("bool cant be bigger then int");

@@ -1,0 +1,72 @@
+print("TIC TAC TOE GAME");
+bool gameStillPlays = true;
+int valueAt1 = 0;
+int valueAt2 = 0;
+int valueAt3 = 0;
+int valueAt4 = 0;
+int valueAt5 = 0;
+int valueAt6 = 0;
+int valueAt7 = 0;
+int valueAt8 = 0;
+int valueAt9 = 0;
+int whosTurn = 8;
+while (gameStillPlays){
+    //print board
+    print("Ignore the leading 1, 0 represents an empty cell, 8 represents player 1 and 4 represents player 2");
+    printi(1000 + 100 * valueAt1 + 10 * valueAt2 + 1 * valueAt3);
+    printi(1000 + 100 * valueAt4 + 10 * valueAt5 + 1 * valueAt6);
+    printi(1000 + 100 * valueAt7 + 10 * valueAt8 + 1 * valueAt9);
+    // Get player input
+    int input = 0;
+    while (input <= 0 or input > 9 or 
+           (input == 1 and valueAt1 != 0) or (input == 2 and valueAt2 != 0) or (input == 3 and valueAt3 != 0) or
+           (input == 4 and valueAt4 != 0) or (input == 5 and valueAt5 != 0) or (input == 6 and valueAt6 != 0) or
+           (input == 7 and valueAt7 != 0) or (input == 8 and valueAt8 != 0) or (input == 9 and valueAt9 != 0)){
+        print("Enter your play, board is numbered like a phone");
+        printi(123);
+        printi(456);
+        printi(789);
+        input = readi(0);
+    }
+    
+    if (false) print("ERROR, SHOULD NEVER HAPPEN!"); // for estatics
+    else if (input == 1) valueAt1 = whosTurn;
+    else if (input == 2) valueAt2 = whosTurn;
+    else if (input == 3) valueAt3 = whosTurn;
+    else if (input == 4) valueAt4 = whosTurn;
+    else if (input == 5) valueAt5 = whosTurn;
+    else if (input == 6) valueAt6 = whosTurn;
+    else if (input == 7) valueAt7 = whosTurn;
+    else if (input == 8) valueAt8 = whosTurn;
+    else if (input == 9) valueAt9 = whosTurn;
+    else print("ERROR, SHOULD NEVER HAPPEN!");
+    whosTurn = 32 / whosTurn;
+
+    //Check for winner
+    int whoWon = 0;
+    if (false) print("ERROR, SHOULD NEVER HAPPEN!"); // for estatics
+    else if (valueAt1 == valueAt2 and valueAt1 == valueAt3) whoWon = valueAt1;
+    else if (valueAt1 == valueAt4 and valueAt1 == valueAt7) whoWon = valueAt1;
+    else if (valueAt1 == valueAt5 and valueAt1 == valueAt9) whoWon = valueAt1;
+    else if (valueAt3 == valueAt5 and valueAt3 == valueAt7) whoWon = valueAt3;
+    else if (valueAt3 == valueAt6 and valueAt3 == valueAt9) whoWon = valueAt3;
+    else if (valueAt7 == valueAt8 and valueAt7 == valueAt9) whoWon = valueAt7;
+    if (whoWon > 0){
+        print("Someone won!! congrats to the winner and suck it to the loser. the winner is:");
+        printi(whoWon * 1111);
+        print(" ");
+        printi(1000 + 100 * valueAt1 + 10 * valueAt2 + 1 * valueAt3);
+        printi(1000 + 100 * valueAt4 + 10 * valueAt5 + 1 * valueAt6);
+        printi(1000 + 100 * valueAt7 + 10 * valueAt8 + 1 * valueAt9);
+        print("Again the winner is:");
+        printi(whoWon * 1111);
+        gameStillPlays = false;
+    }
+    else if (valueAt1 + valueAt2 + valueAt3 + valueAt4 + valueAt5 + valueAt6 + valueAt7 + valueAt8 + valueAt9 == 8 + 4 + 8 + 4 + 8 + 4 + 8 + 4 + 8){
+        print("Its a tie :<");
+        printi(1000 + 100 * valueAt1 + 10 * valueAt2 + 1 * valueAt3);
+        printi(1000 + 100 * valueAt4 + 10 * valueAt5 + 1 * valueAt6);
+        printi(1000 + 100 * valueAt7 + 10 * valueAt8 + 1 * valueAt9);
+        gameStillPlays = false;
+    }
+}

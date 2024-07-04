@@ -1,0 +1,14 @@
+
+if (true){int q;}
+bool x = true;
+int i = 0;
+int j = 4;
+if (true){int z;}
+while (x){
+    bool y = i / j > 4;
+    if (x and not y) {
+        bool x = false;
+    }
+    i = i + 1;
+    j = (j + i) / 2;
+}

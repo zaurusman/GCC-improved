@@ -1,0 +1,8 @@
+byte var1 = 255b;
+var1 = var1 + 2b;
+byte var2 = 1b;
+if (var1 == var2) {
+print("you are good");
+} else {
+print("you code is wrong");
+}

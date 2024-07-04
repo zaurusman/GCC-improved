@@ -1,0 +1,61 @@
+int x = 8;
+while(x > 0){
+    if(x == 3){
+        print("bye");
+        x = x - 1;
+        break;
+    }
+    printi(x);
+    x = x - 1;
+}
+
+int y = 10;
+int temp = y;
+while(temp > 0){
+    y = temp;
+    temp = temp - 1;
+    if(y < 5){
+        print("bye");
+        break;
+    }
+    printi(y);
+}
+
+int z = 10;
+while(z > 4){
+    z = z - 2;
+    break;
+    print("should not print");
+}
+
+int k = 5000;
+while(k == k){
+    if(not(k != k))
+        break;
+    print("should not print");
+    k = x + y + z / k;
+}
+
+x = 10;
+y = 0;
+while(x > 4 or y < 3){
+    if(x == y){
+        print("bye");
+        break;
+    }
+    printi(x + y);
+    x = x - 1;
+    y = y + 1;
+}
+
+x = 9;
+y = 1;
+while(x > 4 and y < 3){
+    if(x == y){
+        print("bye");
+        break;
+    }
+    printi(x - y);
+    x = x - 1;
+    y = y + 1;
+}

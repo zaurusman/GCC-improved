@@ -1,0 +1,48 @@
+print("TRUE evaluation");
+if (true)
+    printi(1);
+
+print("FALSE evaluation");
+if (false)
+    printi(1);
+
+print("Evaluation with if (exp){printi(1)} with truth tabels {0, 1} and {00, 01, 10, 11}");
+
+print("NOT truth table");
+if (not false)
+    printi(1);
+
+if (not true)
+    printi(1);
+
+
+print("AND truth table");
+
+if (false and false)
+    printi(1);
+
+if (false and true)
+    printi(1);
+
+if (true and false)
+    printi(1);
+
+if (true and true)
+    printi(1);
+
+
+print("OR truth table");
+
+if (false or false)
+    printi(1);
+
+if (false or true)
+    printi(1);
+
+if (true or false)
+    printi(1);
+
+if (true or true)
+    printi(1);
+
+

@@ -1,0 +1,8 @@
+byte var1 = 257b;
+byte var2 = 1b;
+if (5/(var1-var2)>9) {
+print("this should not be printed, div by zero error");
+} else {
+print("this should not be printed, div by zero error");
+}
+print("this should not be printed, div by zero error");

@@ -1,0 +1,7 @@
+if (false) int a = (int) 4b;
+if (false) byte c = (byte) 4;
+if (false) int d = (byte) 4b;
+if (false) byte e = (int) 4;
+if (false) int t = (byte) 4;
+if (false) byte y = (int) 4 b;
+if (false) int f = (bool) 4 b;

@@ -1,0 +1,7 @@
+1 RELOP ==
+1 STRING 24977 m  =<=dCsNjU
+1 NUM 71850
+1 NUM 8920
+1 ID Z
+1 ID S
+Error \

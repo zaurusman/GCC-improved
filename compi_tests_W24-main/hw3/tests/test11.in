@@ -1,0 +1,20 @@
+{
+	return;
+	int a;
+	byte y = (byte) a;
+	y = a;
+	a = (int) y;
+	a = y;
+}
+{
+	bool a;
+	bool y;
+	a = y;
+	y = not a;
+	while (a){
+		y = not a or a;
+		continue;
+	}
+}
+byte z;
+return;

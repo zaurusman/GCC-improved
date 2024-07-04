@@ -1,0 +1,3 @@
+int a;
+printi(a);
+int c = printi(a + 3 / a);

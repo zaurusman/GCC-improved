@@ -1,0 +1,19 @@
+int x;
+printi(x);
+int y = 1;
+printi(y);
+{
+    int z;
+    printi(x);
+    printi(y);
+    printi(z);
+    z = 3;
+    printi(z);
+}
+int k;
+printi(k);
+int j = 2;
+printi(j);
+j = 4;
+k = j;
+printi(k);

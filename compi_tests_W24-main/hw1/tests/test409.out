@@ -1,0 +1,4 @@
+1 RELOP >
+1 BOOL bool
+1 STRING ~ HQqIyP XN6H0CEyEVaA5 9qkpLF0ptpcmakCh h 0060249 \ \ 31390 E ^
+Error \

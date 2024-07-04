@@ -1,0 +1,8 @@
+int v1 = 5;
+int v2 = 0;
+if (v2 == 0 or v1/v2 > 1) {
+   print("Not failing this time");
+} else {
+   print("If you see this you if is in big trouble");
+}
+print("End of program");

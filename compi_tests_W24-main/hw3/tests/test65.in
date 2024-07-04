@@ -1,0 +1,4 @@
+
+readi(1);
+if (true) int readi_ = readi(1);
+if (true) byte should_fail = readi(1);

@@ -1,0 +1,2 @@
+
+if (false < true) int x_shouldnt_be_printed;

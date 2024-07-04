@@ -1,0 +1,8 @@
+bool c = false;
+if (not c) {
+    int x = 6;
+    int y = x + 3;
+    printi(y);
+}
+else
+    syntax error;

@@ -1,0 +1,10 @@
+
+bool x = false;
+x = true;
+int x_int;
+bytep x_byte;
+if (true) int q = (int) x_int;
+if (true) byte y = (byte) x_byte;
+if (true) int z = (int) x_byte;
+if (true) byte w = (byte) x_int;
+if (true) int g = (byte) x_int;

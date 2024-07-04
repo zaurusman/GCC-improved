@@ -1,0 +1,15 @@
+// define 50 variables, in 5 lines of code and each line should have 10 variables. Give this first var a value of 1 and the last var a value of 50
+int var1 = 1; int var2 = 2; int var3 = 3; int var4 = 4; int var5 = 5; int var6 = 6; int var7 = 7; int var8 = 8; int var9 = 9; int var10 = 10;
+int var11 = 11; int var12 = 12; int var13 = 13; int var14 = 14; int var15 = 15; int var16 = 16; int var17 = 17; int var18 = 18; int var19 = 19; int var20 = 20;
+int var21 = 21; int var22 = 22; int var23 = 23; int var24 = 24; int var25 = 25; int var26 = 26; int var27 = 27; int var28 = 28; int var29 = 29; int var30 = 30;
+int var31 = 31; int var32 = 32; int var33 = 33; int var34 = 34; int var35 = 35; int var36 = 36; int var37 = 37; int var38 = 38; int var39 = 39; int var40 = 40;
+int var41 = 41; int var42 = 42; int var43 = 43; int var44 = 44; int var45 = 45; int var46 = 46; int var47 = 47; int var48 = 48; int var49 = 49; int var50 = 50;
+// print the value of the 50 variables in 5 lines of code, each line should have 10 variables
+printi(var1); printi(var2); printi(var3); printi(var4); printi(var5); printi(var6); printi(var7); printi(var8); printi(var9); printi(var10);
+printi(var11); printi(var12); printi(var13); printi(var14); printi(var15); printi(var16); printi(var17); printi(var18); printi(var19); printi(var20);
+printi(var21); printi(var22); printi(var23); printi(var24); printi(var25); printi(var26); printi(var27); printi(var28); printi(var29); printi(var30);
+printi(var31); printi(var32); printi(var33); printi(var34); printi(var35); printi(var36); printi(var37); printi(var38); printi(var39); printi(var40);
+printi(var41); printi(var42); printi(var43); printi(var44); printi(var45); printi(var46); printi(var47); printi(var48); printi(var49); printi(var50);
+
+
+

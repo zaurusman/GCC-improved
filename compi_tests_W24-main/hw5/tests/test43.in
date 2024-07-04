@@ -1,0 +1,10 @@
+int u = 0;
+byte v = 0b;
+int var1;
+var1 = readi(u);
+var1 = readi(v);
+byte var2;
+var2 = readi(v);
+print("if you see this, the program is broken you can't put a int in a byte variable");
+var2 = readi(u);
+print("if you see this, the program is broken you can't put a int in a byte variable");

@@ -1,0 +1,4 @@
+byte v1 = 5b;
+int v2 = 10;
+byte v3 = v1 + v2;
+print("If you add a byte and an int, the result is an int and can be stored in a byte this is bad and you are failing the test");

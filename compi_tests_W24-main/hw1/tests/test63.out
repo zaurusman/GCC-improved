@@ -1,0 +1,7 @@
+1 STRING "
+1 INT int
+1 STRING B[n"\\"	G\ \		R	
+1 BINOP *
+2 ID bMdThHHxgS
+2 STRING k"
+Error undefined escape sequence x16

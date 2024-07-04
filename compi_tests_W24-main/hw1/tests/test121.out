@@ -1,0 +1,12 @@
+1 ID mIcmW2IPgoJGF9N
+1 STRING \ 	 1670 89464 0 ==truenotIzOF4ROVNi29VtOxaJ
+1 ID N
+1 NUM 61016
+1 ID cdZFaHipo
+1 RELOP <=
+1 ID R6T1y
+2 BINOP *
+2 ID kdaWZn
+2 STRING 
+2 ID A
+Error \

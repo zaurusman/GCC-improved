@@ -1,0 +1,14 @@
+if (false)
+	if (true)
+		x = 3;
+	else 
+		if (x == 3)
+			x = 2;
+		else
+			x = 1;
+	if (y)
+		x = 0;
+	else
+		x = -1;
+
+x = 2;

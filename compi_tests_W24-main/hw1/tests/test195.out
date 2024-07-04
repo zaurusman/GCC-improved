@@ -1,0 +1,5 @@
+1 INT int
+1 STRING swDWpL
+1 NUM 45803
+1 ID i40ZVnGLgtQ
+Error \

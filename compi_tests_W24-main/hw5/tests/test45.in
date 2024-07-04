@@ -1,0 +1,8 @@
+//test the bool by default is false
+bool a;
+if (a){
+print("You code is not working, bool by default is false");
+}
+else{
+print("bool by default is false");
+}
