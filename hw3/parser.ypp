@@ -1,0 +1,108 @@
+%{
+	#include <iostream>
+	#include <stdlib.h>
+	#include "output.hpp"
+
+	using namespace std;
+
+	extern int yylex();
+	extern int yylineno;
+	int yyerror(const char * message);
+%}
+
+%token INT
+%token BYTE
+%token B
+%token BOOL
+%token TRUE
+%token FALSE
+%token RETURN
+%token BREAK
+%token CONTINUE
+%token SC
+%token ID
+%token NUM
+%token STRING
+
+%right ASSIGN
+
+%left OR
+%left AND
+
+%left EQ_NEQ
+%left RELOP
+
+%left PLUS_MINUS
+%left MUL_DIV
+
+%right NOT
+
+%left RPAREN LPAREN 
+%left RBRACE LBRACE	
+
+%nonassoc ELSE
+%nonassoc IF
+%nonassoc WHILE
+
+
+%%
+
+Program       :  Statements                                     {output::printProductionRule(1);} 
+;
+
+Statements    :  Statement                                      {output::printProductionRule(2);} 
+              |  Statements Statement                           {output::printProductionRule(3);} 
+;
+
+Statement     :  LBRACE Statements RBRACE                       {output::printProductionRule(4);} 
+              |  Type ID SC                                     {output::printProductionRule(5);} 
+              |  Type ID ASSIGN Exp SC                          {output::printProductionRule(6);} 
+              |  ID ASSIGN Exp SC                               {output::printProductionRule(7);} 
+              |  Call SC                                        {output::printProductionRule(8);} 
+              |  RETURN SC                                      {output::printProductionRule(9);} 
+              |  IF LPAREN Exp RPAREN Statement                 {output::printProductionRule(10);} 
+              |  IF LPAREN Exp RPAREN Statement ELSE Statement  {output::printProductionRule(11);} 
+              |  WHILE LPAREN Exp RPAREN Statement              {output::printProductionRule(12);} 
+              |  BREAK SC                                       {output::printProductionRule(13);} 
+              |  CONTINUE SC                                    {output::printProductionRule(14);} 
+;
+
+Call          :  ID LPAREN Exp RPAREN                           {output::printProductionRule(15);} 
+;
+
+Type          :  INT                                            {output::printProductionRule(16);} 
+              |  BYTE                                           {output::printProductionRule(17);} 
+              |  BOOL                                           {output::printProductionRule(18);} 
+;
+
+Exp           :  LPAREN Exp RPAREN                              {output::printProductionRule(19);} 
+              |  Exp MUL_DIV Exp                                {output::printProductionRule(20);} 
+              |  Exp PLUS_MINUS Exp                             {output::printProductionRule(20);} 
+              |  ID                                             {output::printProductionRule(21);} 
+              |  Call                                           {output::printProductionRule(22);} 
+              |  NUM                                            {output::printProductionRule(23);} 
+              |  NUM B                                          {output::printProductionRule(24);} 
+              |  STRING                                         {output::printProductionRule(25);} 
+              |  TRUE                                           {output::printProductionRule(26);} 
+              |  FALSE                                          {output::printProductionRule(27);} 
+              |  NOT Exp                                        {output::printProductionRule(28);} 
+              |  Exp AND Exp                                    {output::printProductionRule(29);} 
+              |  Exp OR Exp                                     {output::printProductionRule(30);} 
+              |  Exp RELOP Exp                                  {output::printProductionRule(31);} 
+              |  Exp EQ_NEQ Exp                                 {output::printProductionRule(31);} 
+              |  LPAREN Type RPAREN Exp                         {output::printProductionRule(32);} 
+;
+
+%%
+
+int main()
+{
+	yyparse();
+}
+
+int yyerror(const char * message)
+{
+	output::errorSyn(yylineno);
+	exit(0);
+}
+

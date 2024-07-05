@@ -1,0 +1,119 @@
+#!/bin/bash 
+# change these per each homework 
+#	link to tests:
+testsurl="https://github.com/Whitomtit/HW3_tests"
+makefileurl="https://github.com/Whitomtit/HW3_makefile"
+
+hostname="cscomp"
+tmpdir="selfcheck_tmp"
+if [ $( hostname ) != "$hostname" ]
+	then 
+	echo "This script is only intended to run on "$hostname"!" 
+	exit 
+fi 
+
+if [ -z "$1" ]
+	then 
+	echo "Usage: $0 submission_file"
+	exit 
+fi
+
+if [ ! -f "$1" ] 
+	then
+	echo "Submission zip file not found!" 
+	exit 
+fi 
+
+rm -rf "$tmpdir" &> /dev/null 
+
+if [ -d "$tmpdir" ] 
+	then 
+	echo "Cannot clear tmp directory. Please delete '"$tmpdir"' manually and try again" 
+	exit 
+fi 
+
+mkdir "$tmpdir" &> /dev/null 
+unzip "$1" -d "$tmpdir" &> /dev/null 
+
+if [[ $? != 0 ]] 
+	then 
+	echo "Unable to unzip submission file!" 
+	exit
+fi
+
+cd "$tmpdir"
+
+if [ ! -f scanner.lex ] 
+	then
+	echo "File scanner.lex not found!"
+	exit
+fi
+
+if [ ! -f parser.ypp ] 
+	then
+	echo "File parser.ypp not found!"
+	exit
+fi
+
+if [ ! -f hw3_output.cpp ] 
+	then
+	echo "File hw3_output.cpp not found!"
+	exit
+fi
+
+if [ ! -f hw3_output.hpp ] 
+	then
+	echo "File hw3_output.hpp not found!"
+	exit
+fi
+
+git clone "$makefileurl" &> /dev/null
+if [ ! -d HW3_makefile ]
+	then
+		echo "Unable to download makefile!"
+		exit
+fi
+cd HW3_makefile
+mv * ../
+cd ..
+
+make -f Makefile-hw3
+
+if [ ! -f hw3 ] 
+	then 
+	echo "Cannot build submission!" 
+	exit 
+fi 
+
+git clone "$testsurl" &> /dev/null
+if [ ! -d HW3_tests ]
+	then
+		echo "Unable to download tests!"
+		exit
+fi
+cd HW3_tests
+mv * ../
+cd ..
+
+#	number of tests: 
+numtests=2 
+#	command to execute test: 
+command="./hw3 < t\$i.in >& t\$i.res"
+i="1" 
+
+while [ $i -le $numtests ] 
+	do 
+		eval $command 
+		diff t$i.res t$i.out &> /dev/null 
+		if [[ $? != 0 ]] 
+			then
+			echo "Failed test #"$i"!" 
+			exit 
+		fi 
+		i=$[$i+1] 
+done 
+
+cd .. &> /dev/null 
+rm -rf "$tmpdir" 
+echo "Ok to submit :)" 
+exit
