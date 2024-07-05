@@ -1,19 +1,28 @@
 #ifndef __ATTRIBUTES_H
 #define __ATTRIBUTES_H
 
-#include <std::string>
+#include <string>
+
+enum type_t {
+    INT_T,
+    BYTE_T,
+    BOOL_T,
+    STRING_T,
+};
+
 typedef struct {
-        std::string type;
+        type_t type;
     } exp_;
+
 typedef union {
     exp_ exp;
     int val;
-    std::string type;
-    std::string name;
-    std::string op;
+    type_t type;
+    char* name;
 
-}STYPE;
-#define YYSTYPE STYPE // tells bison to use stype as the stack type
+} STYPE;
+
+#define YYSTYPE STYPE // tells Bison to use STYPE as the stack type
 
 
 

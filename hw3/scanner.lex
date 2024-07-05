@@ -1,11 +1,12 @@
 %{
 
 /* Declarations section */
-#include <stdio.h>
-#include "parser.tab.hpp"
 #include <iostream>
 #include "hw3_output.hpp"
 #include "attributes.hpp"
+#include <stdio.h>
+#include "parser.tab.hpp"
+
 
 using namespace std;
 
@@ -26,10 +27,10 @@ printable       ([\x20\x21\x23-\x5b\x5d-\x7e]|\t)
 
 %%
 
-int                                           { yylval.type = "int"; return INT; }
-byte                                          { yylval.type = "byte"; return BYTE; }
+int                                           { yylval.type = INT_T; return INT; }
+byte                                          { yylval.type = BYTE_T; return BYTE; }
 b                                             return B;
-bool                                          { yylval.type = "bool"; return BOOL; }
+bool                                          { yylval.type = BOOL_T; return BOOL; }
 and                                           return AND;    
 or                                            return OR;    
 not                                           return NOT;    
@@ -47,10 +48,10 @@ continue                                      return CONTINUE;
 \{                                            return LBRACE;    
 \}                                            return RBRACE;    
 =                                             return ASSIGN;    
-[\<\>]=?                                      { yylval.op = yytext; return RELOP; }
-==|!=                                         { yylval.op = yytext; return EQ_NEQ; }
-[\+\-]                                        { yylval.op = yytext; return PLUS_MINUS; }
-[\*\/]                                        { yylval.op = yytext; return MUL_DIV; }
+[\<\>]=?                                      return RELOP;
+==|!=                                         return EQ_NEQ;
+[\+\-]                                        return PLUS_MINUS;
+[\*\/]                                        return MUL_DIV;
 \/\/                                          {BEGIN(COMM);}
 <COMM>[^\n\r]*[\r|\n|\r\n]?                   {BEGIN(INITIAL); /*ignore*/}
 {letter}({letter}|{digit})*                   { yylval.name = yytext; return ID; }
