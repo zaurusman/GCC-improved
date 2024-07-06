@@ -7,7 +7,6 @@
 using namespace output;
 using namespace std;
 
-
 extern int yylineno;
 
 void numB(exp_ &e, int num) {
