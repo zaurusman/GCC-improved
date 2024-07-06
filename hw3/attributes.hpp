@@ -8,6 +8,7 @@ enum type_t {
     BYTE_T,
     BOOL_T,
     STRING_T,
+    VOID_T,
 };
 
 typedef struct {
