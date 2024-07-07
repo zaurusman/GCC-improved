@@ -9,6 +9,7 @@ enum type_t {
     BOOL_T,
     STRING_T,
     VOID_T,
+    FUNC_T
 };
 
 typedef struct {

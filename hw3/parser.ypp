@@ -85,7 +85,7 @@ Type          :  INT                                            {$$ = $1;}
 Exp           :  LPAREN Exp RPAREN                              {$$ = $2;}
               |  Exp MUL_DIV Exp                                {binop($$, $1, $3);}
               |  Exp PLUS_MINUS Exp                             {binop($$, $1, $3);}
-              |  ID                                             {}
+              |  ID                                             {expId($$,$1);}
               |  Call                                           {$$ = $1;}
               |  NUM                                            {$$.type = INT_T;}
               |  NUM B                                          {numB($$, $1);}

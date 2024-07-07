@@ -4,6 +4,8 @@
 #include "hw3_output.hpp"
 #include <string>
 #include "attributes.hpp"
+#include "symbols.hpp"
+
 using namespace output;
 using namespace std;
 
@@ -15,6 +17,15 @@ void numB(exp_ &e, int num) {
         exit(0);
     }
     e.type = BYTE_T;
+}
+
+void expId(exp_ &e, char* id) {
+    type_t id_type = symbols::lookup(string(id));
+    if(id_type == VOID_T || id_type == FUNC_T) {
+        errorUndef(yylineno,string(id));
+        exit(0);
+    }
+    e.type = id_type;
 }
 
 void binop(exp_ &e, exp_ &e1, exp_ &e2) {
@@ -66,20 +77,20 @@ void call(exp_ &r,char* name,exp_ &arg) {
     string id = string(name);
     if(id == "print"){
         if(arg.type != STRING_T){
-             errorPrototypeMismatch(yylineno,id,"string");
+             errorPrototypeMismatch(yylineno,id,"STRING");
              exit(0);
         }
         r.type = VOID_T;
 
     }else if(id == "printi") {
         if(arg.type != INT_T){
-             errorPrototypeMismatch(yylineno,id,"int");
+             errorPrototypeMismatch(yylineno,id,"INT");
              exit(0);
         }
         r.type = VOID_T;
     }else if(id == "readi") {
         if(arg.type != INT_T){
-             errorPrototypeMismatch(yylineno,id,"int");
+             errorPrototypeMismatch(yylineno,id,"INT");
              exit(0);
         }
         r.type = INT_T;
