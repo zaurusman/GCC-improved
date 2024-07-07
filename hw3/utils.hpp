@@ -10,6 +10,54 @@ using namespace output;
 using namespace std;
 
 extern int yylineno;
+extern SymbolTable symtab;
+
+
+void declaration(type_t t, char* id) {
+    if(symtab.lookUp(string(id)) != VOID_T){
+        errorDef(yylineno,id);
+        exit(0);
+    }
+    symtab.insert(string(id),t);
+}
+
+void assign(char* id, exp_ e) {
+    type_t t = symtab.lookUp(string(id));
+    if( t == VOID_T){
+        errorUndef(yylineno,id);
+        exit(0);
+    }
+    if(t != e.type && !(t == INT_T && e.type == BYTE_T)) {
+        errorMismatch(yylineno);
+        exit(0);
+    }
+}
+
+void myReturn() {
+    while(symtab.myEndScope());
+}
+
+void ifbool(exp_ e) {
+    if(e.type != BOOL_T) {
+        errorMismatch(yylineno);
+        exit(0);
+    }
+    symtan.makeTbale();
+}
+
+void myBreak() {
+    if(! symtab.inLoop()) {
+        errorUnexpectedBreak(yylineno);
+        exit(0);
+    }
+}
+
+void myCont() {
+    if(! symtab.inLoop()) {
+        errorUnexpectedContinue(yylineno);
+        exit(0);
+    }
+}
 
 void numB(exp_ &e, int num) {
     if (num > 255) {

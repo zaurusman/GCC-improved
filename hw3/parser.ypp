@@ -4,12 +4,14 @@
 	#include "hw3_output.hpp"
 	#include "attributes.hpp"
 	#include "utils.hpp"
+	#include "symbols.hpp"
 
 	using namespace std;
 	using namespace output;
 	extern int yylex();
 	extern int yylineno;
 	int yyerror(const char * message);
+	symbols::SymbolTable symtab;
 
 %}
 
@@ -54,24 +56,30 @@
 
 %%
 
-Program       :  Statements                                     {} 
+Program       :  M1 Statements                                  {symtab.myEndScope();}
+;
+M1            :                                                 {symtab.init();}
+;
+Statements    :  Statement                                      {}
+              |  Statements Statement                           {}
 ;
 
-Statements    :  Statement                                      {} 
-              |  Statements Statement                           {} 
+Statement     :  LBRACE M2 Statements RBRACE                    {symtab.myEndScope();}
+              |  Type ID SC                                     {declaration($1,$2);}
+              |  Type ID ASSIGN Exp SC                          {declaration($1,$2); assign($2,$4);}
+              |  ID ASSIGN Exp SC                               {assign($1,$3);}
+              |  Call SC                                        {}
+              |  RETURN SC                                      {/*myReturn();*/}
+              |  IF LPAREN Exp RPAREN M3 Statement              {symtab.myEndScope();}
+              |  IF LPAREN Exp RPAREN M3 Statement {symtab.myEndScope();} ELSE M2 Statement {symtab.myEndScope();}
+              |  WHILE LPAREN Exp RPAREN M3 Statement           {symtab.myEndScope();}
+              |  BREAK SC                                       {myBreak();}
+              |  CONTINUE SC                                    {myCont();}
 ;
 
-Statement     :  LBRACE Statements RBRACE                       {} 
-              |  Type ID SC                                     {} 
-              |  Type ID ASSIGN Exp SC                          {} 
-              |  ID ASSIGN Exp SC                               {} 
-              |  Call SC                                        {} 
-              |  RETURN SC                                      {} 
-              |  IF LPAREN Exp RPAREN Statement                 {} 
-              |  IF LPAREN Exp RPAREN Statement ELSE Statement  {} 
-              |  WHILE LPAREN Exp RPAREN Statement              {} 
-              |  BREAK SC                                       {} 
-              |  CONTINUE SC                                    {} 
+M2            :                                                 {symtab.makeTable();}
+;
+M3            :                                                 {ifbool(stack.peek(1));}
 ;
 
 Call          :  ID LPAREN Exp RPAREN                           {call($$,$1,$3);}

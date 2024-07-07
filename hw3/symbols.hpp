@@ -27,17 +27,31 @@ private:
     unordered_map<string,Symbol> symbol_table;
     stack <vector<Symbol>> symbols_stack;
     stack<int> offsets_stack;
+    unsigned long long loop_counter;
+
 public:
+
+    void startLoop() {
+        loop_counter++;
+    }
+
+    void endLoop() {
+        loop_counter--;
+    }
+
+    bool inLoop() {
+        return loop_counter > 0;
+    }
+
     void makeTable() {
         symbols_stack.push(vector<Symbol>());
         if(offsets_stack.empty()){
             offsets_stack.push(0);
         } else
             offsets_stack.push(offsets_stack.top());
-
     }
 
-    void insert(string name,type_t type,type) {
+    void insert(string name,type_t type) {
         Symbol sym = Symbol(name,type, offsets_stack.top());
         symbols_stack.top().push_back(sym);
         symbol_table[name] = sym;
@@ -51,9 +65,13 @@ public:
         insert("print",FUNC_T);
         insert("printi",FUNC_T);
         insert("readi",FUNC_T);
+        loop_counter = 0;
     }
 
-    void myendScope() {
+    bool myEndScope() {
+        if(symbols_stack.empty()) {
+            return false;
+        }
         endScope();
         vector<Symbol> scope = symbols_stack.top();
         symbols_stack.pop();
@@ -83,6 +101,7 @@ public:
                 //should not get here
             }
         }
+        return true;
     }
 
     type_t lookUp(string name) {
