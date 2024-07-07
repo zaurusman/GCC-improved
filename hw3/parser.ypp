@@ -70,16 +70,16 @@ Statement     :  LBRACE M2 Statements RBRACE                    {symtab.myEndSco
               |  ID ASSIGN Exp SC                               {assign($1,$3);}
               |  Call SC                                        {}
               |  RETURN SC                                      {/*myReturn();*/}
-              |  IF If_cond Statement                           {symtab.myEndScope();}
-              |  IF If_cond Statement ELSE M4 Statement         {symtab.myEndScope();}
-              |  WHILE LPAREN Exp RPAREN M3 Statement           {symtab.myEndScope();}
+              |  IF LPAREN Exp RPAREN {ifbool($3);} Statement Else_S       {symtab.myEndScope();}
+              |  WHILE LPAREN Exp RPAREN {ifbool($3);} Statement           {symtab.myEndScope();}
               |  BREAK SC                                       {myBreak();}
               |  CONTINUE SC                                    {myCont();}
 ;
+Else_S        : ELSE M4 Statement                               {}
+             |                                                  {}
+;
 
 M2            :                                                 {symtab.makeTable();}
-;
-If_cond       : LPAREN Exp RPAREN                               {ifbool($2);}
 ;
 M4            :                                                 {symtab.myEndScope(); symtab.makeTable();}
 ;
