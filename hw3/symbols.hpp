@@ -4,7 +4,7 @@
 #include "hw3_output.hpp"
 #include <string>
 #include "attributes.hpp"
-#include <map>
+#include <unordered_map>
 #include <stack>
 #include <vector>
 
@@ -17,8 +17,14 @@ public:
     string name;
     type_t type;
     int offset;
-    type_t arg;
 
+    Symbol(string n, type_t t, int o) {
+        name = n;
+        type = t;
+        offset = o;
+    }
+
+    Symbol() = default;
 };
 
 class SymbolTable {
@@ -95,7 +101,7 @@ public:
                 case BYTE_T:
                     printID(s.name,s.offset,"BYTE");
                     break;
-                case BOOL:
+                case BOOL_T:
                     printID(s.name,s.offset,"BOOL");
                     break;
                 //should not get here
@@ -105,7 +111,7 @@ public:
     }
 
     type_t lookUp(string name) {
-        if(symbol_table.find(name) == symbols_table.end()){
+        if(symbol_table.find(name) == symbol_table.end()){
             return VOID_T;
         }
         return symbol_table[name].type;

@@ -42,7 +42,7 @@ void ifbool(exp_ e) {
         errorMismatch(yylineno);
         exit(0);
     }
-    symtan.makeTbale();
+    symtab.makeTable();
 }
 
 void myBreak() {
@@ -68,8 +68,8 @@ void numB(exp_ &e, int num) {
 }
 
 void expId(exp_ &e, char* id) {
-    type_t id_type = symbols::lookup(string(id));
-    if(id_type == VOID_T || id_type == FUNC_T) {
+    type_t id_type = symtab.lookUp(string(id));
+    if (id_type == VOID_T || id_type == FUNC_T) {
         errorUndef(yylineno,string(id));
         exit(0);
     }
@@ -77,11 +77,11 @@ void expId(exp_ &e, char* id) {
 }
 
 void binop(exp_ &e, exp_ &e1, exp_ &e2) {
-     if( (e1.type != INT_T && e1.type != BYTE_T) || (e2.type != INT_T && e2.type != BYTE_T) ) {
+     if ( (e1.type != INT_T && e1.type != BYTE_T) || (e2.type != INT_T && e2.type != BYTE_T) ) {
         errorMismatch(yylineno);
         exit(0);
      }
-     if(e1.type == INT_T || e2.type == INT_T) {
+     if (e1.type == INT_T || e2.type == INT_T) {
         e.type = INT_T;
      }else {
         e.type = BYTE_T;
@@ -89,7 +89,7 @@ void binop(exp_ &e, exp_ &e1, exp_ &e2) {
 }
 
 void logic_not(exp_ &e, exp_ &e1) {
-    if(e1.type != BOOL_T) {
+    if (e1.type != BOOL_T) {
         errorMismatch(yylineno);
         exit(0);
     }
@@ -98,7 +98,7 @@ void logic_not(exp_ &e, exp_ &e1) {
 
 
 void logic(exp_ &e, exp_ &e1, exp_ &e2) {
-    if(e1.type != BOOL_T || e2.type != BOOL_T) {
+    if (e1.type != BOOL_T || e2.type != BOOL_T) {
         errorMismatch(yylineno);
         exit(0);
     }
@@ -106,7 +106,7 @@ void logic(exp_ &e, exp_ &e1, exp_ &e2) {
 }
 
 void relop(exp_ &e, exp_ &e1, exp_ &e2) {
-     if( (e1.type != INT_T && e1.type != BYTE_T) || (e2.type != INT_T && e2.type != BYTE_T) ) {
+     if ( (e1.type != INT_T && e1.type != BYTE_T) || (e2.type != INT_T && e2.type != BYTE_T) ) {
         errorMismatch(yylineno);
         exit(0);
      }
@@ -114,7 +114,7 @@ void relop(exp_ &e, exp_ &e1, exp_ &e2) {
 }
 
 void cast(exp_ &e, type_t &t, exp_ &e2) {
-    if( (t != INT_T && t != BYTE_T) || (e2.type != INT_T && e2.type != BYTE_T) ) {
+    if ( (t != INT_T && t != BYTE_T) || (e2.type != INT_T && e2.type != BYTE_T) ) {
         errorMismatch(yylineno);
         exit(0);
      }
@@ -123,14 +123,14 @@ void cast(exp_ &e, type_t &t, exp_ &e2) {
 
 void call(exp_ &r,char* name,exp_ &arg) {
     string id = string(name);
-    if(id == "print"){
+    if (id == "print"){
         if(arg.type != STRING_T){
              errorPrototypeMismatch(yylineno,id,"STRING");
              exit(0);
         }
         r.type = VOID_T;
 
-    }else if(id == "printi") {
+    }else if (id == "printi") {
         if(arg.type != INT_T){
              errorPrototypeMismatch(yylineno,id,"INT");
              exit(0);
