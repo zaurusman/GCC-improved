@@ -33,9 +33,6 @@ void assign(char* id, exp_ e) {
     }
 }
 
-void myReturn() {
-    while(symtab.myEndScope());
-}
 
 void ifbool(exp_ e) {
     if(e.type != BOOL_T) {
