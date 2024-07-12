@@ -26,9 +26,9 @@
 %token BREAK
 %token CONTINUE
 %token SC
-%token <name> ID
+%token <id> ID
 %token <val> NUM
-%token <name> STRING
+%token <id> STRING
 
 %right ASSIGN
 
@@ -72,7 +72,7 @@ Statement     :  LBRACE M2 Statements RBRACE                    {symtab.myEndSco
               |  RETURN SC                                      {}
               |  IF LPAREN Exp RPAREN M3 Statement              {symtab.myEndScope();}
               |  IF LPAREN Exp RPAREN M3 Statement ELSE M4 Statement {symtab.myEndScope();}
-              |  WHILE LPAREN Exp RPAREN M3 Statement           {symtab.myEndScope();}
+              |  WHILE LPAREN Exp RPAREN M5 Statement           {symtab.endLoop(); symtab.myEndScope();}
               |  BREAK SC                                       {myBreak();}
               |  CONTINUE SC                                    {myCont();}
 ;
@@ -82,6 +82,8 @@ M2            :                                                 {symtab.makeTabl
 M3            :                                                 {ifbool($<exp>-1);}
 ;
 M4            :                                                 {symtab.myEndScope(); symtab.makeTable();}
+;
+M5            :                                                 {ifbool($<exp>-1); symtab.startLoop();}
 ;
 
 Call          :  ID LPAREN Exp RPAREN                           {call($$, $1, $3);}

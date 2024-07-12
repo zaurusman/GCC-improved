@@ -16,11 +16,16 @@ typedef struct {
         type_t type;
     } exp_;
 
+typedef struct {
+        char* name;
+        int len;
+    } id_;
+
 typedef union {
     exp_ exp;
     int val;
     type_t type;
-    char* name;
+    id_ id;
 
 } STYPE;
 

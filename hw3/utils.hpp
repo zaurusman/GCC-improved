@@ -13,18 +13,18 @@ extern int yylineno;
 extern SymbolTable symtab;
 
 
-void declaration(type_t t, char* id) {
-    if(symtab.lookUp(string(id)) != VOID_T){
-        errorDef(yylineno,id);
+void declaration(type_t t, id_ id) {
+    if(symtab.lookUp(string(id.name, id.len)) != VOID_T){
+        errorDef(yylineno, string(id.name, id.len));
         exit(0);
     }
-    symtab.insert(string(id),t);
+    symtab.insert(string(id.name, id.len),t);
 }
 
-void assign(char* id, exp_ e) {
-    type_t t = symtab.lookUp(string(id));
+void assign(id_ id, exp_ e) {
+    type_t t = symtab.lookUp(string(id.name, id.len));
     if( t == VOID_T){
-        errorUndef(yylineno,id);
+        errorUndef(yylineno, string(id.name, id.len));
         exit(0);
     }
     if(t != e.type && !(t == INT_T && e.type == BYTE_T)) {
@@ -64,10 +64,10 @@ void numB(exp_ &e, int num) {
     e.type = BYTE_T;
 }
 
-void expId(exp_ &e, char* id) {
-    type_t id_type = symtab.lookUp(string(id));
+void expId(exp_ &e, id_ id) {
+    type_t id_type = symtab.lookUp(string(id.name, id.len));
     if (id_type == VOID_T || id_type == FUNC_T) {
-        errorUndef(yylineno,string(id));
+        errorUndef(yylineno,string(id.name, id.len));
         exit(0);
     }
     e.type = id_type;
@@ -118,29 +118,29 @@ void cast(exp_ &e, type_t &t, exp_ &e2) {
      e.type = t;
 }
 
-void call(exp_ &r,char* name,exp_ &arg) {
-    string id = string(name);
-    if (id == "print"){
+void call(exp_ &r, id_ id,exp_ &arg) {
+    string name = string(id.name, id.len);
+    if (name == "print"){
         if(arg.type != STRING_T){
-             errorPrototypeMismatch(yylineno,id,"STRING");
+             errorPrototypeMismatch(yylineno,name,"STRING");
              exit(0);
         }
         r.type = VOID_T;
 
-    }else if (id == "printi") {
+    }else if (name == "printi") {
         if(arg.type != INT_T){
-             errorPrototypeMismatch(yylineno,id,"INT");
+             errorPrototypeMismatch(yylineno,name,"INT");
              exit(0);
         }
         r.type = VOID_T;
-    }else if(id == "readi") {
+    }else if(name == "readi") {
         if(arg.type != INT_T){
-             errorPrototypeMismatch(yylineno,id,"INT");
+             errorPrototypeMismatch(yylineno,name,"INT");
              exit(0);
         }
         r.type = INT_T;
     }else {
-        errorUndefFunc(yylineno,id);
+        errorUndefFunc(yylineno,name);
         exit(0);
     }
 

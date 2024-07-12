@@ -54,9 +54,9 @@ continue                                      return CONTINUE;
 [\*\/]                                        return MUL_DIV;
 \/\/                                          {BEGIN(COMM);}
 <COMM>[^\n\r]*[\r|\n|\r\n]?                   {BEGIN(INITIAL); /*ignore*/}
-{letter}({letter}|{digit})*                   { yylval.name = yytext; return ID; }
+{letter}({letter}|{digit})*                   { yylval.id.name = yytext; yylval.id.len = yyleng; return ID; }
 [1-9]{digit}*|0                               { yylval.val = stoi(yytext); return NUM; }
-\"([^\n\r\"\\]|\\[rnt\"\\])+\"                { yylval.name = yytext; return STRING; }
+\"([^\n\r\"\\]|\\[rnt\"\\])+\"                { yylval.id.name = yytext; yylval.id.len = yyleng;  return STRING; }
 
 {whitespace}			               	      {; /*ignore*/}
 .	                                          {output::errorLex(yylineno); exit(0);}
