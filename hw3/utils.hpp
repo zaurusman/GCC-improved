@@ -128,13 +128,13 @@ void call(exp_ &r, id_ id,exp_ &arg) {
         r.type = VOID_T;
 
     }else if (name == "printi") {
-        if(arg.type != INT_T){
+        if(arg.type != INT_T && arg.type != BYTE_T){
              errorPrototypeMismatch(yylineno,name,"INT");
              exit(0);
         }
         r.type = VOID_T;
     }else if(name == "readi") {
-        if(arg.type != INT_T){
+        if(arg.type != INT_T && arg.type != BYTE_T){
              errorPrototypeMismatch(yylineno,name,"INT");
              exit(0);
         }

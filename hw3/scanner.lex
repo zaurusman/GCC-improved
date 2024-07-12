@@ -55,7 +55,7 @@ continue                                      return CONTINUE;
 \/\/                                          {BEGIN(COMM);}
 <COMM>[^\n\r]*[\r|\n|\r\n]?                   {BEGIN(INITIAL); /*ignore*/}
 {letter}({letter}|{digit})*                   { yylval.id.name = yytext; yylval.id.len = yyleng; return ID; }
-[1-9]{digit}*|0                               { yylval.val = stoi(yytext); return NUM; }
+[1-9]{digit}*|0                               { yylval.val = (int)stol(yytext); return NUM; }
 \"([^\n\r\"\\]|\\[rnt\"\\])+\"                { yylval.id.name = yytext; yylval.id.len = yyleng;  return STRING; }
 
 {whitespace}			               	      {; /*ignore*/}
